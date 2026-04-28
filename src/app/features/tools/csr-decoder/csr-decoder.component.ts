@@ -1,19 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-declare global {
-  interface Window {
-    forge?: {
-      pki: {
-        certificationRequestFromPem: (pem: string) => any;
-        publicKeyToPem: (key: unknown) => string;
-        publicKeyFromPem: (pem: string) => any;
-      };
-      asn1?: unknown;
-    };
-  }
-}
+import * as forge from 'node-forge';
 
 type DecodedCsr = {
   subjectCN?: string;
@@ -34,15 +22,13 @@ type DecodedCsr = {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="bg-gradient-to-br from-gray-900 via-bm-blue to-gray-900 text-white pt-32 pb-20">
+    <section class="bg-gradient-to-br from-gray-900 via-bm-blue to-gray-900 pt-32 pb-20 text-white">
       <div class="container mx-auto px-6">
         <div class="max-w-4xl">
           <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-cyan-100">
             <span class="w-2 h-2 bg-bm-blue rounded-full animate-pulse"></span> Ferramentas BMTech
           </span>
-          <h1 class="mt-6 text-4xl font-bold leading-tight md:text-6xl">
-            CSR Decoder
-          </h1>
+          <h1 class="mt-6 text-4xl font-bold leading-tight md:text-6xl">CSR Decoder</h1>
           <p class="mt-5 max-w-2xl text-lg leading-relaxed text-blue-100">
             Cole a sua <strong>Certificate Signing Request</strong> para validar, rapidamente, o domínio, a Chave 
             Pública e outros detalhes opcionais da solicitação, antes da emissão definitiva do certificado.
@@ -57,12 +43,12 @@ type DecodedCsr = {
           <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 md:p-8">
             <div class="mb-6">
               <div>
-                <h2 class="text-2xl font-bold text-bm-blue">Insira a CSR</h2>
-                <p class="mt-2 text-sm leading-relaxed text-slate-600">
+              <h2 class="text-2xl font-bold text-bm-blue">Insira a CSR</h2>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">
                   Aceita os formatos "<code>BEGIN CERTIFICATE REQUEST</code>" e
                   "<code>BEGIN NEW CERTIFICATE REQUEST</code>".
-                </p>
-              </div>
+              </p>
+            </div>
             </div>
 
             <label for="csrInput" class="mb-2 block text-sm font-bold uppercase tracking-wide text-slate-600">
@@ -80,10 +66,9 @@ type DecodedCsr = {
               <button
                 type="button"
                 (click)="decodeCSR()"
-                [disabled]="isLoadingForge()"
-                class="rounded-xl bg-bm-red px-6 py-3 font-bold text-white shadow-lg shadow-red-900/20 transition hover:-translate-y-0.5 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                class="rounded-xl bg-bm-red px-6 py-3 font-bold text-white shadow-lg shadow-red-900/20 transition hover:-translate-y-0.5 hover:bg-red-700"
               >
-                {{ isLoadingForge() ? 'Carregando...' : 'Decodificar CSR' }}
+                Decodificar CSR
               </button>
               <button
                 type="button"
@@ -151,7 +136,9 @@ type DecodedCsr = {
                     @if (decodedCsr()?.sans?.length) {
                       <div class="mt-3 flex flex-wrap gap-2">
                         @for (san of decodedCsr()?.sans || []; track san) {
-                          <span class="rounded-full bg-white px-3 py-1 text-sm font-medium text-slate-700 ring-1 ring-slate-200">
+                          <span
+                            class="rounded-full bg-white px-3 py-1 text-sm font-medium text-slate-700 ring-1 ring-slate-200"
+                          >
                             {{ san }}
                           </span>
                         }
@@ -197,39 +184,27 @@ type DecodedCsr = {
       </div>
     </section>
   `,
-  styles: [`
-    .result-card {
-      @apply rounded-2xl border border-slate-200 bg-slate-50 p-4;
-    }
+  styles: [
+    `
+      .result-card {
+        @apply rounded-2xl border border-slate-200 bg-slate-50 p-4;
+      }
 
-    .result-label {
-      @apply block text-xs font-bold uppercase tracking-[0.18em] text-slate-500;
-    }
+      .result-label {
+        @apply block text-xs font-bold uppercase tracking-[0.18em] text-slate-500;
+      }
 
-    .result-value {
-      @apply mt-2 block break-words text-sm font-semibold text-slate-800;
-    }
-  `]
+      .result-value {
+        @apply mt-2 block break-words text-sm font-semibold text-slate-800;
+      }
+    `,
+  ],
 })
-export class CsrDecoderComponent implements OnInit {
+export class CsrDecoderComponent {
   csrInput = '';
   decodedCsr = signal<DecodedCsr | null>(null);
   errorMessage = signal('');
   copyStatus = signal('');
-  isLoadingForge = signal(true);
-
-  async ngOnInit() {
-    try {
-      await this.ensureForgeLoaded();
-    } catch (error) {
-      console.error('Something went wrong. Please, try again.', error);
-      this.errorMessage.set(
-        'Something went wrong. Please, try again.',
-      );
-    } finally {
-      this.isLoadingForge.set(false);
-    }
-  }
 
   reset() {
     this.csrInput = '';
@@ -269,36 +244,6 @@ export class CsrDecoderComponent implements OnInit {
     }
   }
 
-  private async ensureForgeLoaded() {
-    if (window.forge) {
-      return;
-    }
-
-    await new Promise<void>((resolve, reject) => {
-      const existingScript = document.querySelector<HTMLScriptElement>('script[data-forge-csr="true"]');
-      if (existingScript) {
-        if (window.forge) {
-          resolve();
-          return;
-        }
-
-        existingScript.addEventListener('load', () => resolve(), { once: true });
-        existingScript.addEventListener('error', () => reject(new Error('Forge script failed.')), {
-          once: true,
-        });
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/forge/0.10.0/forge.min.js';
-      script.async = true;
-      script.dataset['forgeCsr'] = 'true';
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error('Forge script failed.'));
-      document.head.appendChild(script);
-    });
-  }
-
   private parseCSR(csr: string): DecodedCsr {
     const normalizedCsr = csr.trim();
 
@@ -311,11 +256,6 @@ export class CsrDecoderComponent implements OnInit {
       !normalizedCsr.includes('-----BEGIN NEW CERTIFICATE REQUEST-----')
     ) {
       throw new Error('Formato de CSR inválido. Verifique o bloco PEM completo.');
-    }
-
-    const forge = window.forge;
-    if (!forge) {
-      throw new Error('Something went wrong.');
     }
 
     const sanitizedCsr = normalizedCsr
