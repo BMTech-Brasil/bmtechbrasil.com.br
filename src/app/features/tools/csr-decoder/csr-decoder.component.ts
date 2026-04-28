@@ -38,14 +38,14 @@ type DecodedCsr = {
       <div class="container mx-auto px-6">
         <div class="max-w-4xl">
           <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-cyan-100">
-            Ferramenta BM Tech
+            <span class="w-2 h-2 bg-bm-blue rounded-full animate-pulse"></span> Ferramentas BMTech
           </span>
           <h1 class="mt-6 text-4xl font-bold leading-tight md:text-6xl">
             CSR Decoder
           </h1>
           <p class="mt-5 max-w-2xl text-lg leading-relaxed text-blue-100">
-            Cole a sua Certificate Signing Request para validar rapidamente o assunto, a chave
-            p&uacute;blica e os detalhes principais antes da emiss&atilde;o do certificado.
+            Cole a sua <strong>Certificate Signing Request</strong> para validar, rapidamente, o domínio, a Chave 
+            Pública e outros detalhes opcionais da solicitação, antes da emissão definitiva do certificado.
           </p>
         </div>
       </div>
@@ -59,8 +59,8 @@ type DecodedCsr = {
               <div>
                 <h2 class="text-2xl font-bold text-bm-blue">Insira a CSR</h2>
                 <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                  Aceita os formatos <code>BEGIN CERTIFICATE REQUEST</code> e
-                  <code>BEGIN NEW CERTIFICATE REQUEST</code>.
+                  Aceita os formatos "<code>BEGIN CERTIFICATE REQUEST</code>" e
+                  "<code>BEGIN NEW CERTIFICATE REQUEST</code>".
                 </p>
               </div>
             </div>
@@ -72,7 +72,7 @@ type DecodedCsr = {
               id="csrInput"
               [(ngModel)]="csrInput"
               spellcheck="false"
-              placeholder="-----BEGIN CERTIFICATE REQUEST-----"
+              placeholder="-----BEGIN CERTIFICATE REQUEST-----\n...\n-----END CERTIFICATE REQUEST-----"
               class="min-h-[360px] w-full rounded-2xl border border-slate-200 bg-slate-950 p-5 font-mono text-sm leading-6 text-cyan-100 outline-none transition focus:border-bm-blue focus:ring-4 focus:ring-blue-100"
             ></textarea>
 
@@ -83,7 +83,7 @@ type DecodedCsr = {
                 [disabled]="isLoadingForge()"
                 class="rounded-xl bg-bm-red px-6 py-3 font-bold text-white shadow-lg shadow-red-900/20 transition hover:-translate-y-0.5 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {{ isLoadingForge() ? 'Carregando Forge...' : 'Decodificar CSR' }}
+                {{ isLoadingForge() ? 'Carregando...' : 'Decodificar CSR' }}
               </button>
               <button
                 type="button"
@@ -96,7 +96,7 @@ type DecodedCsr = {
 
             @if (errorMessage()) {
               <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                <p class="font-bold">N&atilde;o foi poss&iacute;vel decodificar esta CSR.</p>
+                <p class="font-bold">Ocorreu um erro. Por favor, tente novamente.</p>
                 <p class="mt-1">{{ errorMessage() }}</p>
               </div>
             }
@@ -106,7 +106,7 @@ type DecodedCsr = {
             <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 md:p-8">
               <h2 class="text-2xl font-bold text-bm-blue">Resultado</h2>
               <p class="mt-2 text-sm text-slate-600">
-                Os campos abaixo s&atilde;o extra&iacute;dos localmente no navegador.
+                Os campos abaixo são extraídos localmente no navegador.
               </p>
 
               @if (decodedCsr()) {
@@ -114,31 +114,31 @@ type DecodedCsr = {
                   <div class="grid gap-4 sm:grid-cols-2">
                     <div class="result-card">
                       <span class="result-label">Common Name</span>
-                      <span class="result-value">{{ decodedCsr()?.subjectCN || 'N&atilde;o informado' }}</span>
+                      <span class="result-value">{{ decodedCsr()?.subjectCN || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">Organization</span>
-                      <span class="result-value">{{ decodedCsr()?.organization || 'N&atilde;o informado' }}</span>
+                      <span class="result-value">{{ decodedCsr()?.organization || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">Organizational Unit</span>
-                      <span class="result-value">{{ decodedCsr()?.organizationalUnit || 'N&atilde;o informado' }}</span>
+                      <span class="result-value">{{ decodedCsr()?.organizationalUnit || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">E-mail</span>
-                      <span class="result-value">{{ decodedCsr()?.emailAddress || 'N&atilde;o informado' }}</span>
+                      <span class="result-value">{{ decodedCsr()?.emailAddress || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">Locality</span>
-                      <span class="result-value">{{ decodedCsr()?.locality || 'N&atilde;o informado' }}</span>
+                      <span class="result-value">{{ decodedCsr()?.locality || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">State</span>
-                      <span class="result-value">{{ decodedCsr()?.state || 'N&atilde;o informado' }}</span>
+                      <span class="result-value">{{ decodedCsr()?.state || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">Country</span>
-                      <span class="result-value">{{ decodedCsr()?.country || 'N&atilde;o informado' }}</span>
+                      <span class="result-value">{{ decodedCsr()?.country || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">Key</span>
@@ -157,7 +157,7 @@ type DecodedCsr = {
                         }
                       </div>
                     } @else {
-                      <p class="mt-3 text-sm text-slate-500">Nenhum SAN encontrado nesta solicita&ccedil;&atilde;o.</p>
+                      <p class="mt-3 text-sm text-slate-500">Nenhum SAN encontrado nesta solicitação.</p>
                     }
                   </div>
 
@@ -177,19 +177,19 @@ type DecodedCsr = {
                 </div>
               } @else {
                 <div class="mt-8 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">
-                  Cole uma CSR v&aacute;lida e clique em <strong>Decodificar CSR</strong> para ver os
+                  Cole uma CSR válida e clique em <strong>Decodificar CSR</strong> para ver os
                   detalhes aqui.
                 </div>
               }
             </div>
 
             <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60">
-              <h3 class="text-lg font-bold text-bm-blue">O que verificamos</h3>
+              <h3 class="text-lg font-bold text-bm-blue">O que verificamos:</h3>
               <ul class="mt-4 space-y-3 text-sm leading-relaxed text-slate-600">
-                <li>Formato PEM da solicita&ccedil;&atilde;o</li>
-                <li>Common Name e dados do subject</li>
-                <li>Algoritmo e tamanho da chave p&uacute;blica</li>
-                <li>Subject Alternative Names presentes na CSR</li>
+                <li>O formato da solicitação - PEM (<em>Privacy Enhanced Mail</em>) </li>
+                <li><em>Common Name</em> e outras informações preenchidas no corpo da solicitação</li>
+                <li>Algoritmo e tamanho da Chave Pública</li>
+                <li><em>Subject Alternative Names</em> presentes na solicitação</li>
               </ul>
             </div>
           </div>
@@ -222,9 +222,9 @@ export class CsrDecoderComponent implements OnInit {
     try {
       await this.ensureForgeLoaded();
     } catch (error) {
-      console.error('Failed to load Forge.', error);
+      console.error('Something went wrong. Please, try again.', error);
       this.errorMessage.set(
-        'A biblioteca necessaria para ler a CSR nao foi carregada. Atualize a pagina e tente novamente.',
+        'Something went wrong. Please, try again.',
       );
     } finally {
       this.isLoadingForge.set(false);
@@ -246,11 +246,11 @@ export class CsrDecoderComponent implements OnInit {
 
     try {
       await navigator.clipboard.writeText(publicKey);
-      this.copyStatus.set('Copiado');
+      this.copyStatus.set('Copied');
       setTimeout(() => this.copyStatus.set(''), 2000);
     } catch (error) {
       console.error('Failed to copy public key.', error);
-      this.copyStatus.set('Falhou');
+      this.copyStatus.set('Failed');
       setTimeout(() => this.copyStatus.set(''), 2000);
     }
   }
@@ -263,7 +263,7 @@ export class CsrDecoderComponent implements OnInit {
       const result = this.parseCSR(this.csrInput);
       this.decodedCsr.set(result);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Erro desconhecido ao ler a CSR.';
+      const message = error instanceof Error ? error.message : 'Something went wrong.';
       this.decodedCsr.set(null);
       this.errorMessage.set(message);
     }
@@ -303,19 +303,19 @@ export class CsrDecoderComponent implements OnInit {
     const normalizedCsr = csr.trim();
 
     if (!normalizedCsr) {
-      throw new Error('Cole uma CSR antes de tentar decodificar.');
+      throw new Error('Insira uma CSR antes de tentar decodificar.');
     }
 
     if (
       !normalizedCsr.includes('-----BEGIN CERTIFICATE REQUEST-----') &&
       !normalizedCsr.includes('-----BEGIN NEW CERTIFICATE REQUEST-----')
     ) {
-      throw new Error('Formato de CSR invalido. Verifique o bloco PEM completo.');
+      throw new Error('Formato de CSR inválido. Verifique o bloco PEM completo.');
     }
 
     const forge = window.forge;
     if (!forge) {
-      throw new Error('Forge ainda nao esta disponivel nesta pagina.');
+      throw new Error('Something went wrong.');
     }
 
     const sanitizedCsr = normalizedCsr
@@ -326,7 +326,7 @@ export class CsrDecoderComponent implements OnInit {
     try {
       csrObject = forge.pki.certificationRequestFromPem(sanitizedCsr);
     } catch {
-      throw new Error('Falha ao interpretar a CSR. Confirme se o conteudo foi copiado integralmente.');
+      throw new Error('Falha ao interpretar a CSR. Confirme se o conteúdo foi copiado integralmente.');
     }
 
     const subjectFields: Record<string, string> = {};
@@ -373,7 +373,7 @@ export class CsrDecoderComponent implements OnInit {
 
     return {
       algorithm: 'Desconhecido',
-      strength: 'Nao identificado',
+      strength: 'Não identificado',
     };
   }
 
