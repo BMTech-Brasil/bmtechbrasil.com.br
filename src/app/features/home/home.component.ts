@@ -69,7 +69,7 @@ import { RouterLink } from "@angular/router";
 
     <section class="py-16 bg-white overflow-hidden border-y border-gray-100 shadow-sm">
       <div class="container mx-auto px-6 mb-10 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-bm-blue mb-4">Quem confia na BM Tech</h2>
+        <h2 class="text-3xl md:text-4xl font-bold text-bm-blue mb-4">Quem confia na BMTech</h2>
         <div class="w-20 h-1 bg-bm-red mx-auto"></div>
       </div>
 

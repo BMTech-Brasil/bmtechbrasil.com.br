@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
         <div class="grid md:grid-cols-4 gap-12 mb-12">
           <div>
             <div class="mb-6 select-none">
-              <img src="bmtechlogo.png" alt="BM Tech Logo" class="h-12 w-auto object-contain">
+              <img src="bmtechlogo.png" alt="BMTech Logo" class="h-12 w-auto object-contain">
             </div>
             
             <p class="text-gray-500 text-sm leading-relaxed mb-6">
@@ -26,7 +26,7 @@ import { RouterLink } from '@angular/router';
             </div>
 
             <div class="flex items-center gap-4">
-              <a href="https://www.linkedin.com/company/bmtechdobrasil/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-[#0a66c2] transition-colors duration-300" title="Siga a BM Tech no LinkedIn">
+              <a href="https://www.linkedin.com/company/bmtechdobrasil/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-[#0a66c2] transition-colors duration-300" title="Siga a BMTech no LinkedIn">
                 <span class="sr-only">LinkedIn</span>
                 <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" />
@@ -77,7 +77,7 @@ import { RouterLink } from '@angular/router';
         </div>
 
         <div class="border-t border-gray-200 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
-          <p>© 2026 BM Tech Brasil. Todos os direitos reservados.</p>
+          <p>© 2026 BMTech Brasil. Todos os direitos reservados.</p>
           
           <div class="flex items-center gap-2 bg-white border border-gray-200 px-3 py-1.5 rounded-md shadow-sm select-none" title="Ambiente Seguro">
             <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

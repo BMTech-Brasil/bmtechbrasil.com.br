@@ -12,7 +12,7 @@ import emailjs from '@emailjs/browser';
       <div class="container mx-auto px-6 h-20 flex justify-between items-center">
         
         <a routerLink="/" class="flex items-center hover:opacity-90 transition select-none">
-          <img src="bmtechlogo.png" alt="BM Tech Logo" class="h-12 w-auto object-contain">
+          <img src="bmtechlogo.png" alt="BMTech Logo" class="h-12 w-auto object-contain">
         </a>
 
         <div class="hidden md:flex items-center gap-6 lg:gap-8">

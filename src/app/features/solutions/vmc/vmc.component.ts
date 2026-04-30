@@ -280,7 +280,7 @@ import emailjs from '@emailjs/browser';
         <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 shadow-lg sticky top-24 h-fit">
           <h3 class="text-xl font-bold text-bm-blue mb-4">Parece complicado?</h3>
           <p class="text-gray-600 mb-6">
-            A maioria das empresas precisa de ajuda na configuração do DMARC e na adequação do SVG. A BM Tech oferece a consultoria completa inclusa.
+            A maioria das empresas precisa de ajuda na configuração do DMARC e na adequação do SVG. A BMTech oferece a consultoria completa inclusa.
           </p>
           
           <ul class="space-y-3 mb-8">
@@ -336,7 +336,7 @@ import emailjs from '@emailjs/browser';
               <span class="transition group-open:rotate-180">▼</span>
             </summary>
             <p class="text-gray-600 mt-3 text-sm leading-relaxed">
-              O VMC não será ativado. O padrão BIMI exige segurança máxima. A BM Tech pode ajudar sua equipe de TI a implementar o DMARC gradualmente (monitoramento -> quarentena -> rejeição) para não afetar o fluxo de e-mails.
+              O VMC não será ativado. O padrão BIMI exige segurança máxima. A BMTech pode ajudar sua equipe de TI a implementar o DMARC gradualmente (monitoramento -> quarentena -> rejeição) para não afetar o fluxo de e-mails.
             </p>
           </details>
 

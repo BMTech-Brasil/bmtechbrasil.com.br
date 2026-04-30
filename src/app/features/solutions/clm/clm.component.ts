@@ -115,7 +115,7 @@ import emailjs from '@emailjs/browser';
                 <span class="text-green-500 text-xl">✓</span> Conformidade global e máxima compatibilidade nos navegadores
               </li>
               <li class="flex items-center gap-3 font-medium text-gray-700">
-                <span class="text-green-500 text-xl">✓</span> Suporte local e consultoria especializada através da BM Tech
+                <span class="text-green-500 text-xl">✓</span> Suporte local e consultoria especializada através da BMTech
               </li>
             </ul>
           </div>
@@ -200,7 +200,7 @@ import emailjs from '@emailjs/browser';
       <div class="container mx-auto px-6 relative z-10">
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Pronto para unificar sua segurança com a Sectigo?</h2>
         <p class="text-blue-100 max-w-2xl mx-auto mb-10 text-lg">
-          Pare de apagar incêndios devido a certificados expirados. Agende uma consultoria técnica gratuita com os especialistas da BM Tech e implemente um CLM de classe mundial.
+          Pare de apagar incêndios devido a certificados expirados. Agende uma consultoria técnica gratuita com os especialistas da BMTech e implemente um CLM de classe mundial.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-4">
           <button (click)="openContactModal('Consultoria Sectigo CLM', $event)" class="bg-bm-red hover:bg-red-700 text-white px-10 py-4 rounded font-bold text-lg transition shadow-lg">
