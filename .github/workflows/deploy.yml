@@ -27,11 +27,11 @@ jobs:
 
       - name: deploy with rsync
         uses: burnett01/rsync-deployment@v7.0.1
-        with: 
-        switches: -avzr --delete
-        path: dist/bmtech-v2/browser/
-        remote_path: /var/www/bmtechbrasil.com.br
-        remote_host: ${{ secrets.SERVER_HOST }}
-        remote_user: ${{ secrets.SERVER_USER }}
-        remote_key: ${{ secrets.SERVER_SSH_KEY }}
+        with:
+         switches: -avzr --delete
+         path: dist/bmtech-v2/browser/
+         remote_path: /var/www/bmtechbrasil.com.br
+         remote_host: ${{ secrets.SERVER_HOST }}
+         remote_user: ${{ secrets.SERVER_USER }}
+         remote_key: ${{ secrets.SERVER_SSH_KEY }}
 
