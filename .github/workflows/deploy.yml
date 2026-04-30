@@ -26,7 +26,7 @@ jobs:
         run: npm run build -- --configuration=production
 
       - name: deploy with rsync
-        uses: burnett01/rsync-deployment@v7.0.1
+        uses: burnett01/rsync-deployments@v7.0.1
         with:
          switches: -avzr --delete
          path: dist/bmtech-v2/browser/
