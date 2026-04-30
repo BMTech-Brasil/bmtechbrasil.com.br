@@ -149,7 +149,7 @@ import emailjs from '@emailjs/browser';
               <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-3">Plataforma Unificada</h3>
-            <p class="text-gray-600 text-sm">Gira todos os seus ativos da Sectigo (SSL Público, PKI Privada, S/MIME, Code Signing) a partir de um único Painel de Controlo.</p>
+            <p class="text-gray-600 text-sm">Gira todos os seus ativos da Sectigo (SSL Público, PKI Privada, S/MIME, Code Signing) a partir de um único Painel de Controle.</p>
           </div>
         </div>
       </div>
@@ -180,9 +180,9 @@ import emailjs from '@emailjs/browser';
 
     <section class="py-24 bg-gray-900 text-center relative overflow-hidden">
       <div class="container mx-auto px-6 relative z-10">
-        <h2 class="text-3xl font-bold text-white mb-6">Assuma o controlo da sua criptografia</h2>
+        <h2 class="text-3xl font-bold text-white mb-6">Assuma o controle da sua Segurança Digital</h2>
         <p class="text-gray-400 max-w-2xl mx-auto mb-10 text-lg">
-          Fale com a nossa equipe e descubra como implementar o Sectigo Certificate Manager (SCM) e automatizar 100% a sua infraestrutura de certificados.
+          Fale com a nossa equipe e descubra como implementar o Sectigo Certificate Manager (SCM) e automatizar 100% da sua infraestrutura de certificados.
         </p>
         <button (click)="openContactModal('Sectigo SCM - Assessment', $event)" class="bg-bm-red text-white px-10 py-4 rounded font-bold text-lg hover:bg-red-700 transition shadow-lg transform hover:-translate-y-1">
           Solicitar Assessment e Demo

@@ -42,6 +42,8 @@ import emailjs from '@emailjs/browser';
                     </div>
                   </div>
                 </div>
+
+                <a routerLink="/tools/csr-decoder" class="dropdown-item">CSR Decoder</a>
               </div>
             </div>
           </div>

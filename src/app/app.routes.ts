@@ -6,6 +6,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/home/home.component').then(c => c.HomeComponent) 
   },
   {
+    path: 'tools',
+    children: [
+      { path: '', loadComponent: () => import('./features/tools/tools.component').then(c => c.ToolsComponent) },
+      { path: 'csr-decoder', loadComponent: () => import('./features/tools/csr-decoder/csr-decoder.component').then(c => c.CsrDecoderComponent) },
+    ]
+  },
+  {
     path: 'solutions',
     children: [
       { path: 'teramind', loadComponent: () => import('./features/solutions/monitoramento/teramind/teramind.component').then(c => c.TeramindComponent) },

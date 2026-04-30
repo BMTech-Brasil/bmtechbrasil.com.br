@@ -1,59 +1,79 @@
-# BmtechV2
+# BMTech Brasil
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.5.
+_Website_ institucional da BMTech Brasil, desenvolvido com Angular e Tailwind CSS.
 
-## Development server
+## Stack
 
-To start a local development server, run:
+- TypeScript
+- Angular 21
+- Tailwind CSS
+- EmailJS
 
-```bash
-ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Requisitos
 
-## Code scaffolding
+- Node.js (LTS)
+- npm
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Local
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Na raiz do projeto, instale as dependências:
 
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
-
-To build the project run:
+Inicie o servidor de desenvolvimento:
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Acesse:
 
-## Running unit tests
+```text
+http://localhost:4200
+```
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Build
+
+Para gerar a `build`:
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
+Os arquivos finais sÃ£o gerados em `dist/`.
 
-For end-to-end (e2e) testing, run:
+## NPM Scripts 
 
-```bash
-ng e2e
-```
+- `npm start`: inicia o servidor local com recarregamento
+- `npm run build`: gera a `build`
+- `npm run watch`: gera `build` em modo `watch`
+- `npm test`: executa os testes configurados no projeto - **## TODO ##**
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Estrutura
 
-## Additional Resources
+- `src/app/core`: componentes compartilhados, como `navbar` e `footer`
+- `src/app/features`: páginas e funcionalidades principais do _site_
+- `public`: imagens e arquivos estáticos
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Rotas
+
+- `/`: Página Inicial
+- `/solutions/sectigo`: Página -  Sectigo
+- `/solutions/scm`: Página - SCM
+- `/solutions/vmc`: Página VMC
+- `/solutions/portal-flex`: Página Portal Flex
+- `/solutions/monitoramento`: Página de Serviços de Monitoramento
+- `/tools/csr-decoder`: CSR Decoder
+
+## CSR Decoder
+
+A pÃ¡gina ` /tools/csr-decoder ` permite analisar uma Certificate Signing Request (CSR) diretamente no navegador.
+
+Atualmente, utiliza o [`Forge`](https://www.npmjs.com/package/node-forge) via CDN.
+
+## Certificate Decoder - ## TODO ##
+
+Ferramenta para decodificação dos certificados, também codificados no padrão PEM.
