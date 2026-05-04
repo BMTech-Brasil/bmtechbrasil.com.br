@@ -48,7 +48,7 @@ import { RouterLink } from '@angular/router';
         <h2 class="text-3xl font-bold text-bm-blue mb-4">Escolha a solução ideal para o seu desafio</h2>
         <div class="w-16 h-1 bg-bm-red mx-auto mb-6"></div>
         <p class="text-gray-600 text-lg">
-          Não existe uma ferramenta única que sirva para todas as situações. A BM Tech oferece um portfólio robusto com as melhores plataformas globais para garantir que o seu ambiente corporativo se mantém produtivo, auditável e 100% seguro contra fugas de informação.
+          Não existe uma ferramenta única que sirva para todas as situações. A BMTech oferece um portfólio robusto com as melhores plataformas globais para garantir que o seu ambiente corporativo se mantém produtivo, auditável e 100% seguro contra fugas de informação.
         </p>
       </div>
     </section>
@@ -146,7 +146,7 @@ import { RouterLink } from '@angular/router';
           A nossa equipa de arquitetos de segurança realiza uma avaliação gratuita do seu ambiente e recomenda a solução com melhor custo-benefício para a sua empresa.
         </p>
         <button class="bg-bm-red text-white px-10 py-4 rounded font-bold text-lg hover:bg-red-700 transition shadow-lg transform hover:-translate-y-1">
-          Falar com um Consultor BM Tech
+          Falar com um Consultor BMTech
         </button>
       </div>
     </section>
