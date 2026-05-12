@@ -10,6 +10,7 @@ export const routes: Routes = [
     children: [
       { path: '', loadComponent: () => import('./features/tools/tools.component').then(c => c.ToolsComponent) },
       { path: 'csr-decoder', loadComponent: () => import('./features/tools/csr-decoder/csr-decoder.component').then(c => c.CsrDecoderComponent) },
+      { path: 'cert-decoder', loadComponent: () => import('./features/tools/cert-decoder/cert-decoder.component').then(c => c.CertDecoderComponent) },
     ]
   },
   {
