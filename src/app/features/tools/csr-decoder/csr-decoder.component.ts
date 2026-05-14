@@ -17,6 +17,22 @@ type DecodedCsr = {
   keyStrength: string;
 };
 
+type ForgeAttribute = {
+  name?: string;
+  shortName?: string;
+  value?: unknown;
+};
+
+type ForgeAltName = {
+  type?: number;
+  value?: string;
+  ip?: string;
+};
+
+type ForgeSanExtension = {
+  altNames?: ForgeAltName[];
+};
+
 @Component({
   selector: 'app-csr-decoder',
   standalone: true,
@@ -68,7 +84,7 @@ type DecodedCsr = {
                 (click)="decodeCSR()"
                 class="rounded-xl bg-bm-red px-6 py-3 font-bold text-white shadow-lg shadow-red-900/20 transition hover:-translate-y-0.5 hover:bg-red-700"
               >
-                Decodificar CSR
+                Decodificar
               </button>
               <button
                 type="button"
@@ -89,10 +105,29 @@ type DecodedCsr = {
 
           <div class="space-y-6">
             <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 md:p-8">
-              <h2 class="text-2xl font-bold text-bm-blue">Resultado</h2>
+              <div class="flex items-center justify-between gap-4">
+                <h2 class="text-2xl font-bold text-bm-blue">Resultado</h2>
+                <button
+                  type="button"
+                  (click)="copyExtractedFields()"
+                  [disabled]="!decodedCsr()"
+                  class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-bm-blue hover:text-bm-blue disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Copiar"
+                  title="Copiar"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V5a2 2 0 012-2h7a2 2 0 012 2v7a2 2 0 01-2 2h-2M8 7H7a2 2 0 00-2 2v7a2 2 0 002 2h7a2 2 0 002-2v-1M8 7h7a2 2 0 012 2v7" />
+                  </svg>
+                </button>
+              </div>
               <p class="mt-2 text-sm text-slate-600">
                 Os campos abaixo são extraídos localmente no navegador.
               </p>
+              @if (fieldsCopyStatus()) {
+                <p class="mt-2 text-xs font-bold uppercase tracking-wide text-bm-blue">
+                  {{ fieldsCopyStatus() }}
+                </p>
+              }
 
               @if (decodedCsr()) {
                 <div class="mt-8 space-y-4">
@@ -164,21 +199,23 @@ type DecodedCsr = {
                 </div>
               } @else {
                 <div class="mt-8 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">
-                  Cole uma CSR válida e clique em <strong>Decodificar CSR</strong> para ver os
+                  Cole uma CSR válida e clique em <strong>Decodificar</strong> para ver os
                   detalhes aqui.
                 </div>
               }
             </div>
 
-            <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60">
-              <h3 class="text-lg font-bold text-bm-blue">O que verificamos:</h3>
-              <ul class="mt-4 space-y-3 text-sm leading-relaxed text-slate-600">
-                <li>O formato da solicitação - PEM (<em>Privacy Enhanced Mail</em>) </li>
-                <li><em>Common Name</em> e outras informações preenchidas no corpo da solicitação</li>
-                <li>Algoritmo e tamanho da Chave Pública</li>
-                <li><em>Subject Alternative Names</em> presentes na solicitação</li>
-              </ul>
-            </div>
+            @if (!hasDecodedAttempt()) {
+              <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60">
+                <h3 class="text-lg font-bold text-bm-blue">O que verificamos:</h3>
+                <ul class="mt-4 space-y-3 text-sm leading-relaxed text-slate-600">
+                  <li>O formato da solicitação - PEM (<em>Privacy Enhanced Mail</em>)</li>
+                  <li><em>Common Name</em> e outras informações preenchidas no corpo da solicitação</li>
+                  <li>Algoritmo e tamanho da Chave Pública</li>
+                  <li><em>Subject Alternative Names</em> presentes na solicitação</li>
+                </ul>
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -203,13 +240,17 @@ type DecodedCsr = {
 export class CsrDecoderComponent {
   csrInput = '';
   decodedCsr = signal<DecodedCsr | null>(null);
+  hasDecodedAttempt = signal(false);
   errorMessage = signal('');
+  fieldsCopyStatus = signal('');
   copyStatus = signal('');
 
   reset() {
     this.csrInput = '';
     this.decodedCsr.set(null);
+    this.hasDecodedAttempt.set(false);
     this.errorMessage.set('');
+    this.fieldsCopyStatus.set('');
     this.copyStatus.set('');
   }
 
@@ -231,7 +272,9 @@ export class CsrDecoderComponent {
   }
 
   decodeCSR() {
+    this.hasDecodedAttempt.set(true);
     this.errorMessage.set('');
+    this.fieldsCopyStatus.set('');
     this.copyStatus.set('');
 
     try {
@@ -241,6 +284,37 @@ export class CsrDecoderComponent {
       const message = error instanceof Error ? error.message : 'Something went wrong.';
       this.decodedCsr.set(null);
       this.errorMessage.set(message);
+    }
+  }
+
+  async copyExtractedFields() {
+    const decodedCsr = this.decodedCsr();
+    if (!decodedCsr) {
+      return;
+    }
+
+    const extractedFields = [
+      `Common Name: ${decodedCsr.subjectCN || 'Não informado'}`,
+      `Organization: ${decodedCsr.organization || 'Não informado'}`,
+      `Organizational Unit: ${decodedCsr.organizationalUnit || 'Não informado'}`,
+      `E-mail: ${decodedCsr.emailAddress || 'Não informado'}`,
+      `Locality: ${decodedCsr.locality || 'Não informado'}`,
+      `State: ${decodedCsr.state || 'Não informado'}`,
+      `Country: ${decodedCsr.country || 'Não informado'}`,
+      `Key: ${decodedCsr.keyAlgorithm} ${decodedCsr.keyStrength}`,
+      `Subject Alternative Names: ${
+        decodedCsr.sans.length ? decodedCsr.sans.join(', ') : 'Nenhum SAN encontrado'
+      }`,
+    ].join('\n');
+
+    try {
+      await navigator.clipboard.writeText(extractedFields);
+      this.fieldsCopyStatus.set('Copied');
+      setTimeout(() => this.fieldsCopyStatus.set(''), 2000);
+    } catch (error) {
+      console.error('Failed to copy extracted fields.', error);
+      this.fieldsCopyStatus.set('Failed');
+      setTimeout(() => this.fieldsCopyStatus.set(''), 2000);
     }
   }
 
@@ -269,13 +343,7 @@ export class CsrDecoderComponent {
       throw new Error('Falha ao interpretar a CSR. Confirme se o conteúdo foi copiado integralmente.');
     }
 
-    const subjectFields: Record<string, string> = {};
-    for (const attr of csrObject.subject.attributes ?? []) {
-      subjectFields[attr.name || attr.shortName] = attr.value;
-      if (attr.shortName) {
-        subjectFields[attr.shortName] = attr.value;
-      }
-    }
+    const subjectFields = this.mapAttributes(csrObject.subject.attributes ?? []);
 
     const publicKeyPem = forge.pki.publicKeyToPem(csrObject.publicKey);
     const publicKey = forge.pki.publicKeyFromPem(publicKeyPem);
@@ -317,6 +385,27 @@ export class CsrDecoderComponent {
     };
   }
 
+  private mapAttributes(attributes: ForgeAttribute[]): Record<string, string> {
+    const fields: Record<string, string> = {};
+
+    for (const attr of attributes) {
+      const value = typeof attr.value === 'string' ? attr.value : undefined;
+      if (!value) {
+        continue;
+      }
+
+      if (attr.name) {
+        fields[attr.name] = value;
+      }
+
+      if (attr.shortName) {
+        fields[attr.shortName] = value;
+      }
+    }
+
+    return fields;
+  }
+
   private extractSans(csrObject: any): string[] {
     const extensionRequest = (csrObject.attributes ?? []).find(
       (attribute: any) => attribute.name === 'extensionRequest',
@@ -324,24 +413,24 @@ export class CsrDecoderComponent {
 
     const sanExtension = extensionRequest?.extensions?.find(
       (extension: any) => extension.name === 'subjectAltName',
-    );
+    ) as ForgeSanExtension | undefined;
 
     if (!sanExtension?.altNames?.length) {
       return [];
     }
 
     return sanExtension.altNames
-      .map((altName: any) => {
+      .map((altName) => {
         if (altName.type === 2) {
-          return altName.value;
+          return altName.value ?? null;
         }
 
         if (altName.type === 7 && altName.ip) {
           return altName.ip;
         }
 
-        return altName.value || '';
+        return altName.value ?? null;
       })
-      .filter(Boolean);
+      .filter((value): value is string => typeof value === 'string' && value.length > 0);
   }
 }
