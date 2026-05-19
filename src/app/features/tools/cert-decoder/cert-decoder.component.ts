@@ -9,7 +9,6 @@ type DecodedCert = {
   organizationalUnit?: string;
   issuerCN?: string;
   issuerOrganization?: string;
-  issuerOrganizationalUnit?: string;
   serialNumber: string;
   validFrom: string;
   validTo: string;
@@ -165,14 +164,10 @@ type ForgeSanExtension = {
                       <span class="result-value">{{ decodedCert()?.issuerOrganization || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
-                      <span class="result-label">Issuer OU</span>
-                      <span class="result-value">{{ decodedCert()?.issuerOrganizationalUnit || 'Não informado' }}</span>
-                    </div>
-                    <div class="result-card">
                       <span class="result-label">Key</span>
                       <span class="result-value">{{ decodedCert()?.keyAlgorithm }} {{ decodedCert()?.keyStrength }}</span>
                     </div>
-                    <div class="result-card sm:col-span-2">
+                    <div class="result-card">
                       <span class="result-label">Signature Algorithm</span>
                       <span class="result-value">{{ decodedCert()?.signatureAlgorithm }}</span>
                     </div>
@@ -298,7 +293,6 @@ export class CertDecoderComponent {
       `Valid To: ${decodedCert.validTo}`,
       `Issuer CN: ${decodedCert.issuerCN || 'Não informado'}`,
       `Issuer Organization: ${decodedCert.issuerOrganization || 'Não informado'}`,
-      `Issuer OU: ${decodedCert.issuerOrganizationalUnit || 'Não informado'}`,
       `Key: ${decodedCert.keyAlgorithm} ${decodedCert.keyStrength}`,
       `Signature Algorithm: ${decodedCert.signatureAlgorithm}`,
       `Subject Alternative Names: ${
@@ -362,7 +356,6 @@ export class CertDecoderComponent {
       organizationalUnit: subjectFields['organizationalUnitName'] || subjectFields['OU'],
       issuerCN: issuerFields['commonName'] || issuerFields['CN'],
       issuerOrganization: issuerFields['organizationName'] || issuerFields['O'],
-      issuerOrganizationalUnit: issuerFields['organizationalUnitName'] || issuerFields['OU'],
       serialNumber: (certificateObject.serialNumber || '').toUpperCase() || 'Não informado',
       validFrom: this.formatDate(certificateObject.validity.notBefore),
       validTo: this.formatDate(certificateObject.validity.notAfter),
