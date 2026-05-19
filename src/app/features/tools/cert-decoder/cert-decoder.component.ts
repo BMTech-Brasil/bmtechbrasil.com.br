@@ -1,20 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as forge from 'node-forge';
 
-type DecodedCsr = {
+type DecodedCert = {
   subjectCN?: string;
   organization?: string;
   organizationalUnit?: string;
-  emailAddress?: string;
-  locality?: string;
-  state?: string;
-  country?: string;
+  issuerCN?: string;
+  issuerOrganization?: string;
+  serialNumber: string;
+  validFrom: string;
+  validTo: string;
   sans: string[];
   publicKey: string;
   keyAlgorithm: string;
   keyStrength: string;
+  signatureAlgorithm: string;
 };
 
 type ForgeAttribute = {
@@ -34,7 +36,7 @@ type ForgeSanExtension = {
 };
 
 @Component({
-  selector: 'app-csr-decoder',
+  selector: 'app-cert-decoder',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
@@ -42,12 +44,12 @@ type ForgeSanExtension = {
       <div class="container mx-auto px-6">
         <div class="max-w-4xl">
           <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-cyan-100">
-            <span class="w-2 h-2 bg-bm-blue rounded-full animate-pulse"></span> Ferramentas BMTech
+            <span class="h-2 w-2 animate-pulse rounded-full bg-bm-blue"></span> Ferramentas BMTech
           </span>
-          <h1 class="mt-6 text-4xl font-bold leading-tight md:text-6xl">CSR Decoder</h1>
+          <h1 class="mt-6 text-4xl font-bold leading-tight md:text-6xl">Certificate Decoder</h1>
           <p class="mt-5 max-w-2xl text-lg leading-relaxed text-blue-100">
-            Cole a sua <strong>Certificate Signing Request</strong> para validar, rapidamente, o domínio, a Chave 
-            Pública e outros detalhes opcionais da solicitação, antes da emissão definitiva do certificado.
+            Cole um <strong>Certificado</strong> em formato PEM para verificar o domínio, emissor,
+            validade, SANs e detalhes a respeito da Chave Pública diretamente no navegador.
           </p>
         </div>
       </div>
@@ -58,30 +60,27 @@ type ForgeSanExtension = {
         <div class="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
           <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 md:p-8">
             <div class="mb-6">
-              <div>
-              <h2 class="text-2xl font-bold text-bm-blue">Insira a CSR</h2>
+              <h2 class="text-2xl font-bold text-bm-blue">Insira o certificado</h2>
               <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                  Aceita os formatos "<code>BEGIN CERTIFICATE REQUEST</code>" e
-                  "<code>BEGIN NEW CERTIFICATE REQUEST</code>".
+                Aceita o formato "<code>BEGIN CERTIFICATE</code>".
               </p>
             </div>
-            </div>
 
-            <label for="csrInput" class="mb-2 block text-sm font-bold uppercase tracking-wide text-slate-600">
-              CSR PEM
+            <label for="certInput" class="mb-2 block text-sm font-bold uppercase tracking-wide text-slate-600">
+              Certificate PEM
             </label>
             <textarea
-              id="csrInput"
-              [(ngModel)]="csrInput"
+              id="certInput"
+              [(ngModel)]="certInput"
               spellcheck="false"
-              placeholder="-----BEGIN CERTIFICATE REQUEST-----\n...\n-----END CERTIFICATE REQUEST-----"
+              placeholder="-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----"
               class="min-h-[360px] w-full rounded-2xl border border-slate-200 bg-slate-950 p-5 font-mono text-sm leading-6 text-cyan-100 outline-none transition focus:border-bm-blue focus:ring-4 focus:ring-blue-100"
             ></textarea>
 
             <div class="mt-6 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
-                (click)="decodeCSR()"
+                (click)="decodeCertificate()"
                 class="rounded-xl bg-bm-red px-6 py-3 font-bold text-white shadow-lg shadow-red-900/20 transition hover:-translate-y-0.5 hover:bg-red-700"
               >
                 Decodificar
@@ -110,7 +109,7 @@ type ForgeSanExtension = {
                 <button
                   type="button"
                   (click)="copyExtractedFields()"
-                  [disabled]="!decodedCsr()"
+                  [disabled]="!decodedCert()"
                   class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-bm-blue hover:text-bm-blue disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Copiar"
                   title="Copiar"
@@ -129,48 +128,56 @@ type ForgeSanExtension = {
                 </p>
               }
 
-              @if (decodedCsr()) {
+              @if (decodedCert()) {
                 <div class="mt-8 space-y-4">
                   <div class="grid gap-4 sm:grid-cols-2">
                     <div class="result-card">
                       <span class="result-label">Common Name</span>
-                      <span class="result-value">{{ decodedCsr()?.subjectCN || 'Não informado' }}</span>
+                      <span class="result-value">{{ decodedCert()?.subjectCN || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">Organization</span>
-                      <span class="result-value">{{ decodedCsr()?.organization || 'Não informado' }}</span>
+                      <span class="result-value">{{ decodedCert()?.organization || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">Organizational Unit</span>
-                      <span class="result-value">{{ decodedCsr()?.organizationalUnit || 'Não informado' }}</span>
+                      <span class="result-value">{{ decodedCert()?.organizationalUnit || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
-                      <span class="result-label">E-mail</span>
-                      <span class="result-value">{{ decodedCsr()?.emailAddress || 'Não informado' }}</span>
+                      <span class="result-label">Serial Number</span>
+                      <span class="result-value">{{ decodedCert()?.serialNumber || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
-                      <span class="result-label">Locality</span>
-                      <span class="result-value">{{ decodedCsr()?.locality || 'Não informado' }}</span>
+                      <span class="result-label">Valid From</span>
+                      <span class="result-value">{{ decodedCert()?.validFrom }}</span>
                     </div>
                     <div class="result-card">
-                      <span class="result-label">State</span>
-                      <span class="result-value">{{ decodedCsr()?.state || 'Não informado' }}</span>
+                      <span class="result-label">Valid To</span>
+                      <span class="result-value">{{ decodedCert()?.validTo }}</span>
                     </div>
                     <div class="result-card">
-                      <span class="result-label">Country</span>
-                      <span class="result-value">{{ decodedCsr()?.country || 'Não informado' }}</span>
+                      <span class="result-label">Issuer CN</span>
+                      <span class="result-value">{{ decodedCert()?.issuerCN || 'Não informado' }}</span>
+                    </div>
+                    <div class="result-card">
+                      <span class="result-label">Issuer Organization</span>
+                      <span class="result-value">{{ decodedCert()?.issuerOrganization || 'Não informado' }}</span>
                     </div>
                     <div class="result-card">
                       <span class="result-label">Key</span>
-                      <span class="result-value">{{ decodedCsr()?.keyAlgorithm }} {{ decodedCsr()?.keyStrength }}</span>
+                      <span class="result-value">{{ decodedCert()?.keyAlgorithm }} {{ decodedCert()?.keyStrength }}</span>
+                    </div>
+                    <div class="result-card">
+                      <span class="result-label">Signature Algorithm</span>
+                      <span class="result-value">{{ decodedCert()?.signatureAlgorithm }}</span>
                     </div>
                   </div>
 
                   <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <span class="result-label">Subject Alternative Names</span>
-                    @if (decodedCsr()?.sans?.length) {
+                    @if (decodedCert()?.sans?.length) {
                       <div class="mt-3 flex flex-wrap gap-2">
-                        @for (san of decodedCsr()?.sans || []; track san) {
+                        @for (san of decodedCert()?.sans || []; track san) {
                           <span
                             class="rounded-full bg-white px-3 py-1 text-sm font-medium text-slate-700 ring-1 ring-slate-200"
                           >
@@ -179,7 +186,7 @@ type ForgeSanExtension = {
                         }
                       </div>
                     } @else {
-                      <p class="mt-3 text-sm text-slate-500">Nenhum SAN encontrado nesta solicitação.</p>
+                      <p class="mt-3 text-sm text-slate-500">Nenhum SAN encontrado neste certificado.</p>
                     }
                   </div>
 
@@ -191,16 +198,16 @@ type ForgeSanExtension = {
                         (click)="copyPublicKey()"
                         class="rounded-full border border-slate-700 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-300 transition hover:border-cyan-400 hover:text-cyan-300"
                       >
-                        {{ copyStatus() || 'Copiar' }}
+                        {{ publicKeyCopyStatus() || 'Copiar' }}
                       </button>
                     </div>
-                    <pre class="overflow-x-auto whitespace-pre-wrap break-all font-mono text-xs leading-6 text-cyan-100">{{ decodedCsr()?.publicKey }}</pre>
+                    <pre class="overflow-x-auto whitespace-pre-wrap break-all font-mono text-xs leading-6 text-cyan-100">{{ decodedCert()?.publicKey }}</pre>
                   </div>
                 </div>
               } @else {
                 <div class="mt-8 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">
-                  Cole uma CSR válida e clique em <strong>Decodificar</strong> para ver os
-                  detalhes aqui.
+                  Cole um Certificado válido e clique em <strong>Decodificar</strong>
+                  para ver os detalhes aqui.
                 </div>
               }
             </div>
@@ -209,10 +216,11 @@ type ForgeSanExtension = {
               <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60">
                 <h3 class="text-lg font-bold text-bm-blue">O que verificamos:</h3>
                 <ul class="mt-4 space-y-3 text-sm leading-relaxed text-slate-600">
-                  <li>O formato da solicitação - PEM (<em>Privacy Enhanced Mail</em>)</li>
-                  <li><em>Common Name</em> e outras informações preenchidas no corpo da solicitação</li>
+                  <li>O formato do certificado - PEM (<em>Privacy Enhanced Mail</em>)</li>
+                  <li><em>Subject</em>, <em>Common Name</em>, emissor, organização e localidade presentes no certificado</li>
+                  <li>Tempo de Vida Útil</li>
                   <li>Algoritmo e tamanho da Chave Pública</li>
-                  <li><em>Subject Alternative Names</em> presentes na solicitação</li>
+                  <li><em>Subject Alternative Names</em></li>
                 </ul>
               </div>
             }
@@ -237,115 +245,108 @@ type ForgeSanExtension = {
     `,
   ],
 })
-export class CsrDecoderComponent {
-  csrInput = '';
-  decodedCsr = signal<DecodedCsr | null>(null);
+export class CertDecoderComponent {
+  certInput = '';
+  decodedCert = signal<DecodedCert | null>(null);
   hasDecodedAttempt = signal(false);
   errorMessage = signal('');
   fieldsCopyStatus = signal('');
-  copyStatus = signal('');
+  publicKeyCopyStatus = signal('');
 
   reset() {
-    this.csrInput = '';
-    this.decodedCsr.set(null);
+    this.certInput = '';
+    this.decodedCert.set(null);
     this.hasDecodedAttempt.set(false);
     this.errorMessage.set('');
     this.fieldsCopyStatus.set('');
-    this.copyStatus.set('');
+    this.publicKeyCopyStatus.set('');
   }
 
-  async copyPublicKey() {
-    const publicKey = this.decodedCsr()?.publicKey;
-    if (!publicKey) {
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(publicKey);
-      this.copyStatus.set('Copied');
-      setTimeout(() => this.copyStatus.set(''), 2000);
-    } catch (error) {
-      console.error('Failed to copy public key.', error);
-      this.copyStatus.set('Failed');
-      setTimeout(() => this.copyStatus.set(''), 2000);
-    }
-  }
-
-  decodeCSR() {
+  decodeCertificate() {
     this.hasDecodedAttempt.set(true);
     this.errorMessage.set('');
     this.fieldsCopyStatus.set('');
-    this.copyStatus.set('');
+    this.publicKeyCopyStatus.set('');
 
     try {
-      const result = this.parseCSR(this.csrInput);
-      this.decodedCsr.set(result);
+      const result = this.parseCertificate(this.certInput);
+      this.decodedCert.set(result);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Something went wrong.';
-      this.decodedCsr.set(null);
+      this.decodedCert.set(null);
       this.errorMessage.set(message);
     }
   }
 
   async copyExtractedFields() {
-    const decodedCsr = this.decodedCsr();
-    if (!decodedCsr) {
+    const decodedCert = this.decodedCert();
+    if (!decodedCert) {
       return;
     }
 
     const extractedFields = [
-      `Common Name: ${decodedCsr.subjectCN || 'Não informado'}`,
-      `Organization: ${decodedCsr.organization || 'Não informado'}`,
-      `Organizational Unit: ${decodedCsr.organizationalUnit || 'Não informado'}`,
-      `E-mail: ${decodedCsr.emailAddress || 'Não informado'}`,
-      `Locality: ${decodedCsr.locality || 'Não informado'}`,
-      `State: ${decodedCsr.state || 'Não informado'}`,
-      `Country: ${decodedCsr.country || 'Não informado'}`,
-      `Key: ${decodedCsr.keyAlgorithm} ${decodedCsr.keyStrength}`,
+      `Common Name: ${decodedCert.subjectCN || 'Não informado'}`,
+      `Organization: ${decodedCert.organization || 'Não informado'}`,
+      `Organizational Unit: ${decodedCert.organizationalUnit || 'Não informado'}`,
+      `Serial Number: ${decodedCert.serialNumber || 'Não informado'}`,
+      `Valid From: ${decodedCert.validFrom}`,
+      `Valid To: ${decodedCert.validTo}`,
+      `Issuer CN: ${decodedCert.issuerCN || 'Não informado'}`,
+      `Issuer Organization: ${decodedCert.issuerOrganization || 'Não informado'}`,
+      `Key: ${decodedCert.keyAlgorithm} ${decodedCert.keyStrength}`,
+      `Signature Algorithm: ${decodedCert.signatureAlgorithm}`,
       `Subject Alternative Names: ${
-        decodedCsr.sans.length ? decodedCsr.sans.join(', ') : 'Nenhum SAN encontrado'
+        decodedCert.sans.length ? decodedCert.sans.join(', ') : 'Nenhum SAN encontrado'
       }`,
     ].join('\n');
 
+    await this.copyToClipboard(extractedFields, this.fieldsCopyStatus);
+  }
+
+  async copyPublicKey() {
+    const publicKey = this.decodedCert()?.publicKey;
+    if (!publicKey) {
+      return;
+    }
+
+    await this.copyToClipboard(publicKey, this.publicKeyCopyStatus);
+  }
+
+  private async copyToClipboard(value: string, statusSignal: WritableSignal<string>) {
     try {
-      await navigator.clipboard.writeText(extractedFields);
-      this.fieldsCopyStatus.set('Copied');
-      setTimeout(() => this.fieldsCopyStatus.set(''), 2000);
+      await navigator.clipboard.writeText(value);
+      statusSignal.set('Copied');
+      setTimeout(() => statusSignal.set(''), 2000);
     } catch (error) {
-      console.error('Failed to copy extracted fields.', error);
-      this.fieldsCopyStatus.set('Failed');
-      setTimeout(() => this.fieldsCopyStatus.set(''), 2000);
+      console.error('Failed to copy content.', error);
+      statusSignal.set('Failed');
+      setTimeout(() => statusSignal.set(''), 2000);
     }
   }
 
-  private parseCSR(csr: string): DecodedCsr {
-    const normalizedCsr = csr.trim();
+  private parseCertificate(certificatePem: string): DecodedCert {
+    const normalizedCert = certificatePem.trim();
 
-    if (!normalizedCsr) {
-      throw new Error('Insira uma CSR antes de tentar decodificar.');
+    if (!normalizedCert) {
+      throw new Error('Insira um certificado antes de tentar decodificar.');
     }
 
-    if (
-      !normalizedCsr.includes('-----BEGIN CERTIFICATE REQUEST-----') &&
-      !normalizedCsr.includes('-----BEGIN NEW CERTIFICATE REQUEST-----')
-    ) {
-      throw new Error('Formato de CSR inválido. Verifique o bloco PEM completo.');
+    if (!normalizedCert.includes('-----BEGIN CERTIFICATE-----')) {
+      throw new Error('Formato de certificado inválido. Verifique se o bloco PEM completo.');
     }
 
-    const sanitizedCsr = normalizedCsr
-      .replace('BEGIN NEW CERTIFICATE REQUEST', 'BEGIN CERTIFICATE REQUEST')
-      .replace('END NEW CERTIFICATE REQUEST', 'END CERTIFICATE REQUEST');
-
-    let csrObject: any;
+    let certificateObject: forge.pki.Certificate;
     try {
-      csrObject = forge.pki.certificationRequestFromPem(sanitizedCsr);
+      certificateObject = forge.pki.certificateFromPem(normalizedCert);
     } catch {
-      throw new Error('Falha ao interpretar a CSR. Confirme se o conteúdo foi copiado integralmente.');
+      throw new Error(
+        'Falha ao interpretar o certificado. Confirme se o conteúdo foi copiado integralmente.',
+      );
     }
 
-    const subjectFields = this.mapAttributes(csrObject.subject.attributes ?? []);
-
-    const publicKeyPem = forge.pki.publicKeyToPem(csrObject.publicKey);
+    const subjectFields = this.mapAttributes(certificateObject.subject.attributes ?? []);
+    const issuerFields = this.mapAttributes(certificateObject.issuer.attributes ?? []);
+    const publicKeyPem = forge.pki.publicKeyToPem(certificateObject.publicKey);
     const publicKey = forge.pki.publicKeyFromPem(publicKeyPem);
     const { algorithm, strength } = this.getKeyDetails(publicKey);
 
@@ -353,35 +354,16 @@ export class CsrDecoderComponent {
       subjectCN: subjectFields['commonName'] || subjectFields['CN'],
       organization: subjectFields['organizationName'] || subjectFields['O'],
       organizationalUnit: subjectFields['organizationalUnitName'] || subjectFields['OU'],
-      emailAddress: subjectFields['emailAddress'],
-      locality: subjectFields['localityName'] || subjectFields['L'],
-      state: subjectFields['stateOrProvinceName'] || subjectFields['ST'],
-      country: subjectFields['countryName'] || subjectFields['C'],
-      sans: this.extractSans(csrObject),
+      issuerCN: issuerFields['commonName'] || issuerFields['CN'],
+      issuerOrganization: issuerFields['organizationName'] || issuerFields['O'],
+      serialNumber: (certificateObject.serialNumber || '').toUpperCase() || 'Não informado',
+      validFrom: this.formatDate(certificateObject.validity.notBefore),
+      validTo: this.formatDate(certificateObject.validity.notAfter),
+      sans: this.extractSans(certificateObject),
       publicKey: publicKeyPem,
       keyAlgorithm: algorithm,
       keyStrength: strength,
-    };
-  }
-
-  private getKeyDetails(publicKey: any) {
-    if (publicKey?.n?.bitLength) {
-      return {
-        algorithm: 'RSA',
-        strength: `${publicKey.n.bitLength()} bits`,
-      };
-    }
-
-    if (publicKey?.ecparams?.name) {
-      return {
-        algorithm: 'EC',
-        strength: publicKey.ecparams.name,
-      };
-    }
-
-    return {
-      algorithm: 'Desconhecido',
-      strength: 'Não identificado',
+      signatureAlgorithm: this.getSignatureAlgorithm(certificateObject),
     };
   }
 
@@ -406,16 +388,39 @@ export class CsrDecoderComponent {
     return fields;
   }
 
-  private extractSans(csrObject: any): string[] {
-    const extensionRequest = (csrObject.attributes ?? []).find(
-      (attribute: any) => attribute.name === 'extensionRequest',
-    );
+  private formatDate(date: Date): string {
+    return new Intl.DateTimeFormat('pt-BR', {
+      dateStyle: 'medium',
+      timeStyle: 'medium',
+      timeZone: 'UTC',
+    }).format(date) + ' UTC';
+  }
 
-    const sanExtension = extensionRequest?.extensions?.find(
-      (extension: any) => extension.name === 'subjectAltName',
-    ) as ForgeSanExtension | undefined;
+  private getKeyDetails(publicKey: any) {
+    if (publicKey?.n?.bitLength) {
+      return {
+        algorithm: 'RSA',
+        strength: `${publicKey.n.bitLength()} bits`,
+      };
+    }
 
-    if (!sanExtension?.altNames?.length) {
+    if (publicKey?.ecparams?.name) {
+      return {
+        algorithm: 'EC',
+        strength: publicKey.ecparams.name,
+      };
+    }
+
+    return {
+      algorithm: 'Desconhecido',
+      strength: 'Não identificado',
+    };
+  }
+
+  private extractSans(certificateObject: forge.pki.Certificate): string[] {
+    const sanExtension = certificateObject.getExtension('subjectAltName') as ForgeSanExtension | null;
+
+    if (!sanExtension || !Array.isArray(sanExtension.altNames) || !sanExtension.altNames.length) {
       return [];
     }
 
@@ -432,5 +437,15 @@ export class CsrDecoderComponent {
         return altName.value ?? null;
       })
       .filter((value): value is string => typeof value === 'string' && value.length > 0);
+  }
+
+  private getSignatureAlgorithm(certificateObject: forge.pki.Certificate): string {
+    const oid = certificateObject.signatureOid || certificateObject.siginfo?.algorithmOid;
+
+    if (!oid) {
+      return 'Não identificado';
+    }
+
+    return forge.pki.oids[oid] || oid;
   }
 }
