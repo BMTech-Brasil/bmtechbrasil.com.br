@@ -26,7 +26,6 @@ import emailjs from '@emailjs/browser';
 
             <div class="absolute top-full left-0 w-56 bg-white shadow-xl rounded-b-lg border-t-4 border-bm-red opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
               <div class="py-2">
-                
                 <div class="relative group/sectigo">
                   <a routerLink="/solutions/sectigo" class="flex items-center justify-between w-full px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-bm-red transition-colors font-sans cursor-pointer">
                     <span>Sectigo</span>
@@ -34,7 +33,6 @@ import emailjs from '@emailjs/browser';
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                   </a>
-
                   <div class="absolute left-full top-0 w-48 bg-white shadow-xl rounded-lg border border-gray-100 opacity-0 invisible group-hover/sectigo:opacity-100 group-hover/sectigo:visible transition-all duration-300 transform translate-x-2 group-hover/sectigo:translate-x-0 ml-1">
                     <div class="py-2">
                       <a routerLink="/solutions/scm" class="dropdown-item">SCM</a>
@@ -50,7 +48,7 @@ import emailjs from '@emailjs/browser';
           </div>
 
           <div class="relative group h-20 flex items-center">
-            <a routerLink="/solutions/monitoramento" class="nav-item flex items-center gap=1 focus:outline-none cursor-pointer">
+            <a routerLink="/solutions/monitoramento" class="nav-item flex items-center gap-1 focus:outline-none cursor-pointer">
               Monitoramento
               <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </a>
@@ -70,7 +68,67 @@ import emailjs from '@emailjs/browser';
             Fale Conosco
           </a>
         </div>
+
+        <button (click)="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-bm-red focus:outline-none transition-colors">
+          @if (!isMobileMenuOpen()) {
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          } @else {
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          }
+        </button>
+
       </div>
+
+      @if (isMobileMenuOpen()) {
+        <div class="absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-2xl md:hidden flex flex-col max-h-[calc(100vh-5rem)] overflow-y-auto animate-fade-in-up">
+          <div class="p-6 flex flex-col gap-6">
+            
+            <a routerLink="/" (click)="closeMobileMenu()" class="text-lg font-bold text-gray-700 hover:text-bm-red uppercase border-b border-gray-50 pb-2">Home</a>
+
+            <div class="border-b border-gray-50 pb-2">
+              <button (click)="toggleMobileCertificados()" class="w-full flex justify-between items-center text-lg font-bold text-gray-700 hover:text-bm-red uppercase">
+                Certificados
+                <svg class="w-5 h-5 transition-transform duration-300" [class.rotate-180]="isMobileCertificadosOpen()" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              
+              @if (isMobileCertificadosOpen()) {
+                <div class="mt-4 flex flex-col gap-3 pl-4 border-l-2 border-bm-red ml-2">
+                  <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Sectigo</span>
+                  <a routerLink="/solutions/sectigo" (click)="closeMobileMenu()" class="text-gray-600 hover:text-bm-red font-medium">Sectigo Geral</a>
+                  <a routerLink="/solutions/scm" (click)="closeMobileMenu()" class="text-gray-600 hover:text-bm-red font-medium">SCM</a>
+                  <a routerLink="/solutions/vmc" (click)="closeMobileMenu()" class="text-gray-600 hover:text-bm-red font-medium">VMC</a>
+                </div>
+              }
+            </div>
+
+            <div class="border-b border-gray-50 pb-2">
+              <button (click)="toggleMobileMonitoramento()" class="w-full flex justify-between items-center text-lg font-bold text-gray-700 hover:text-bm-red uppercase">
+                Monitoramento
+                <svg class="w-5 h-5 transition-transform duration-300" [class.rotate-180]="isMobileMonitoramentoOpen()" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              
+              @if (isMobileMonitoramentoOpen()) {
+                <div class="mt-4 flex flex-col gap-3 pl-4 border-l-2 border-bm-red ml-2">
+                  <a routerLink="/solutions/monitoramento" (click)="closeMobileMenu()" class="text-gray-600 hover:text-bm-red font-bold">Visão Geral</a>
+                  <a routerLink="/solutions/hexnode" (click)="closeMobileMenu()" class="text-gray-600 hover:text-bm-red font-medium">HexNode</a>
+                  <a routerLink="/solutions/teramind" (click)="closeMobileMenu()" class="text-gray-600 hover:text-bm-red font-medium">Teramind</a>
+                  <a routerLink="/solutions/kickidler" (click)="closeMobileMenu()" class="text-gray-600 hover:text-bm-red font-medium">KickIdler</a>
+                </div>
+              }
+            </div>
+
+            <a routerLink="/solutions/portal-flex" (click)="closeMobileMenu()" class="text-lg font-bold text-gray-700 hover:text-bm-red uppercase border-b border-gray-50 pb-2">Portal Flex</a>
+            
+            <button (click)="openContactModal('Contato Geral', $event); closeMobileMenu()" class="w-full bg-bm-red text-white py-4 rounded-xl font-bold hover:bg-red-700 transition mt-4 text-center uppercase shadow-md shadow-red-900/20">
+              Fale Conosco
+            </button>
+          </div>
+        </div>
+      }
     </nav>
 
     @if (activeModal() !== null) {
@@ -155,10 +213,32 @@ import emailjs from '@emailjs/browser';
   `]
 })
 export class NavbarComponent {
+  isMobileMenuOpen = signal(false);
+  isMobileCertificadosOpen = signal(false);
+  isMobileMonitoramentoOpen = signal(false);
+  
   activeModal = signal<'CONTACT' | null>(null);
   selectedProductName = signal<string>('');
   isSubmitting = signal(false);
   submitSuccess = signal(false);
+  
+  toggleMobileMenu() {
+    this.isMobileMenuOpen.update(v => !v);
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen.set(false);
+    this.isMobileCertificadosOpen.set(false);
+    this.isMobileMonitoramentoOpen.set(false);
+  }
+
+  toggleMobileCertificados() {
+    this.isMobileCertificadosOpen.update(v => !v);
+  }
+
+  toggleMobileMonitoramento() {
+    this.isMobileMonitoramentoOpen.update(v => !v);
+  }
 
   openContactModal(productName: string, event: Event) {
     event.preventDefault();
