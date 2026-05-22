@@ -46,6 +46,9 @@ import emailjs from '@emailjs/browser';
             <button (click)="openContactModal('Hexnode UEM', $event)" class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-[0_4px_20px_rgba(220,38,38,0.4)] transform hover:-translate-y-1">
               Agendar Demonstração
             </button>
+            <button (click)="openContactModal('Teste de 15 dias - KickIdler', $event)" class="bg-white hover:bg-gray-100 text-bm-blue px-6 py-3 md:px-8 md:py-4 rounded font-bold transition shadow-lg whitespace-nowrap">
+              Teste de 15 Dias
+            </button>
           </div>
         </div>
 

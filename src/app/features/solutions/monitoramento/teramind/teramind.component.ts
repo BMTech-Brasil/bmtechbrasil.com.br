@@ -38,9 +38,13 @@ import emailjs from '@emailjs/browser';
           <p class="text-lg text-gray-300 mb-8 leading-relaxed">
             Detecte ameaças internas, previna vazamentos de dados (DLP) e otimize a produtividade da sua equipe com a plataforma líder global.
           </p> 
+          
           <div class="flex gap-4">
             <button class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-lg">
               Agendar Demonstração
+            </button>
+            <button (click)="openContactModal('Teste de 15 dias - KickIdler', $event)" class="bg-white hover:bg-gray-100 text-bm-blue px-6 py-3 md:px-8 md:py-4 rounded font-bold transition shadow-lg whitespace-nowrap">
+              Teste de 15 Dias
             </button>
             <button class="border border-white/30 hover:bg-white/10 text-white px-8 py-4 rounded font-bold transition">
               Ver Funcionalidades
