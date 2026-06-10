@@ -16,7 +16,7 @@ import emailjs from '@emailjs/browser';
         </a>
 
         <div class="hidden md:flex items-center gap-6 lg:gap-8">
-          <a routerLink="/" class="nav-item">Home</a>
+          <a routerLink="/" class="nav-item">Início</a>
 
           <div class="relative group h-20 flex items-center">
             <button class="nav-item flex items-center gap-1 focus:outline-none">
@@ -40,9 +40,6 @@ import emailjs from '@emailjs/browser';
                     </div>
                   </div>
                 </div>
-
-                <a routerLink="/tools/csr-decoder" class="dropdown-item">CSR Decoder</a>
-                <a routerLink="/tools/cert-decoder" class="dropdown-item">Certificate Decoder</a>
               </div>
             </div>
           </div>
@@ -63,6 +60,20 @@ import emailjs from '@emailjs/browser';
           </div>
 
           <a routerLink="/solutions/portal-flex" class="nav-item">Portal Flex</a>
+
+          <div class="relative group h-20 flex items-center">
+            <a routerLink="/solutions/monitoramento" class="nav-item flex items-center gap-1 focus:outline-none cursor-pointer">
+              Ferramentas
+              <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </a>
+
+            <div class="absolute top-full left-0 w-56 bg-white shadow-xl rounded-b-lg border-t-4 border-bm-red opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+              <div class="py-2">
+                <a routerLink="/tools/csr-decoder" class="dropdown-item">CSR Decoder</a>
+                <a routerLink="/tools/cert-decoder" class="dropdown-item">Certificate Decoder</a>
+              </div>
+            </div>
+          </div>
           
           <a href="#" (click)="openContactModal('Contato Geral', $event)" class="bg-bm-red text-white px-6 py-2 rounded font-bold text-sm hover:bg-red-700 transition shadow-md font-sans whitespace-nowrap">
             Fale Conosco
@@ -87,7 +98,7 @@ import emailjs from '@emailjs/browser';
         <div class="absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-2xl md:hidden flex flex-col max-h-[calc(100vh-5rem)] overflow-y-auto animate-fade-in-up">
           <div class="p-6 flex flex-col gap-6">
             
-            <a routerLink="/" (click)="closeMobileMenu()" class="text-lg font-bold text-gray-700 hover:text-bm-red uppercase border-b border-gray-50 pb-2">Home</a>
+            <a routerLink="/" (click)="closeMobileMenu()" class="text-lg font-bold text-gray-700 hover:text-bm-red uppercase border-b border-gray-50 pb-2">Início</a>
 
             <div class="border-b border-gray-50 pb-2">
               <button (click)="toggleMobileCertificados()" class="w-full flex justify-between items-center text-lg font-bold text-gray-700 hover:text-bm-red uppercase">

@@ -3,6 +3,12 @@ import { CommonModule } from '@angular/common';
 import emailjs from '@emailjs/browser';
 import { RouterLink } from "@angular/router";
 
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -10,43 +16,37 @@ import { RouterLink } from "@angular/router";
   template: `
     <div class="bg-gray-50 border-b border-gray-200 mt-20 py-4 relative z-20 shadow-sm">
       <div class="container mx-auto px-2 md:px-6">
-        <div class="flex flex-wrap lg:flex-nowrap justify-center items-center gap-2 md:gap-4">
-          
-          @for (partner of partners(); track partner.name) {
-            <div class="group flex items-center justify-center w-20 h-14 md:w-24 md:h-16 lg:w-28 lg:h-16 p-2 rounded-lg border border-transparent hover:bg-white hover:border-gray-200 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-               <img [src]="partner.img" [alt]="partner.name" 
-                    class="max-h-full max-w-full object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-               
-               <span class="hidden text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-bm-blue transition-colors select-none text-center leading-tight">
-                 {{ partner.name }}
-               </span>
+        <div class="flex flex-wrap lg:flex-nowrap justify-center items-center gap-2 md:gap-4">  
+          @for (group of partnerGroups(); track group.category) {
+            <div class="flex flex-col items-center">
+              <span class="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-200 pb-1 px-4">{{ group.category }}</span>
+              <div class="flex flex-wrap justify-center gap-2 md:gap-4">
+                @for (partner of group.items; track partner.name) {
+                  <a [routerLink]="partner.url" class="group flex items-center justify-center w-20 h-14 md:w-24 md:h-16 lg:w-28 lg:h-16 p-2 rounded-lg border border-transparent hover:bg-white hover:border-gray-200 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+                     <img [src]="partner.img" [alt]="partner.name" class="max-h-full max-w-full object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                     <span class="hidden text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-bm-blue transition-colors select-none text-center leading-tight">{{ partner.name }}</span>
+                  </a>
+                }
+              </div>
             </div>
           }
         </div>
       </div>
     </div>
-
     <section class="bg-gradient-to-br from-gray-900 via-bm-blue to-gray-900 text-white pt-32 pb-24 relative overflow-hidden">
       <div class="absolute right-0 top-0 w-1/2 h-full skew-x-12 translate-x-20 z-0 overflow-hidden border-l-4 border-white/50">
-        
-        <div class="absolute top-0 -left-[25%] w-[150%] h-full -skew-x-12">
-          
+        <div class="absolute top-0 -left-[25%] w-[150%] h-full -skew-x-12">         
           @for (img of heroImages; track $index) {
             <div class="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out"
-                 [ngClass]="{'opacity-100 z-10': currentHeroIndex() === $index, 'opacity-0 z-0': currentHeroIndex() !== $index}">
-              
+                 [ngClass]="{'opacity-100 z-10': currentHeroIndex() === $index, 'opacity-0 z-0': currentHeroIndex() !== $index}">             
               <img [src]="img" class="w-full h-full object-cover transition-transform duration-1000 ease-in-out" 
                    [ngClass]="{'scale-105': currentHeroIndex() === $index, 'scale-100': currentHeroIndex() !== $index}"
-                   alt="Banner Security">
-              
+                   alt="Banner Security">             
               <div class="absolute inset-0 bg-bm-blue/30 mix-blend-multiply"></div>
             </div>
           }
-
         </div>
       </div>
-
       <div class="container mx-auto px-6 relative z-10 flex items-center">
         <div class="max-w-3xl">
           <span class="text-bm-red font-bold tracking-widest uppercase mb-4 block">Segurança & Identidade Digital</span>
@@ -57,12 +57,152 @@ import { RouterLink } from "@angular/router";
           </p>
           <div class="flex flex-col md:flex-row gap-4">
             <button (click)="openContactModal('Consultoria de Segurança', $event)" class="bg-bm-red text-white px-8 py-4 rounded font-bold hover:bg-red-800 transition shadow-lg">Falar com um Consultor</button>
-            
             <button (click)="scrollTo('nossas-solucoes')" class="border-2 border-bm-white text-bm-white px-8 py-4 rounded font-bold hover:bg-bm-blue hover:text-white transition">
               Nossas Soluções
             </button>
-            
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 bg-gray-50 border-y border-gray-200">
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold text-[#03123a] mb-2">CONTAGEM REGRESSIVA PARA A REDUÇÃO DEFINITIVA DO TLS</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto mb-10">O ecossistema de navegadores (Google, Apple) exigirá ciclos de vida mais curtos para os certificados SSL/TLS públicos. Antecipe-se à mudança com a<span class="text-bm-blue font-bold"> BMTECH</span>.</p>
+
+        <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          
+          <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center hover:-translate-y-1 transition-transform duration-300">
+            <div class="bg-blue-50 text-bm-blue font-bold text-[11px] uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+              Próxima Redução
+            </div>
+            
+            <h3 class="text-4xl font-black text-[#1e3a8a] mb-2">EM 100 DIAS</h3>
+            
+            <div class="flex items-center w-full max-w-xs mb-8">
+              <div class="flex-grow h-px bg-gray-200"></div>
+              <span class="px-4 text-sm font-bold text-[#1e3a8a]">15 MAR 2027</span>
+              <div class="flex-grow h-px bg-gray-200"></div>
+            </div>
+
+            <div class="flex gap-2 sm:gap-4 justify-center mb-10">
+              <div class="flex flex-col items-center">
+                <div class="bg-[#f8fafc] border border-[#e2e8f0] text-[#0f172a] text-4xl sm:text-5xl font-bold rounded-xl shadow-sm min-w-[4rem] sm:min-w-[5rem] h-20 sm:h-24 flex items-center justify-center relative overflow-hidden">
+                  <div class="absolute top-1/2 left-0 right-0 h-px bg-gray-200/50"></div>
+                  <span>{{ padZero(timeLeft100().days) }}</span>
+                </div>
+                <span class="text-xs font-bold text-gray-400 uppercase mt-3 tracking-wider">Dias</span>
+              </div>
+              <span class="text-4xl font-bold text-gray-300 self-start mt-4">:</span>
+              
+              <div class="flex flex-col items-center">
+                <div class="bg-[#f8fafc] border border-[#e2e8f0] text-[#0f172a] text-4xl sm:text-5xl font-bold rounded-xl shadow-sm min-w-[4rem] sm:min-w-[5rem] h-20 sm:h-24 flex items-center justify-center relative overflow-hidden">
+                  <div class="absolute top-1/2 left-0 right-0 h-px bg-gray-200/50"></div>
+                  <span>{{ padZero(timeLeft100().hours) }}</span>
+                </div>
+                <span class="text-xs font-bold text-gray-400 uppercase mt-3 tracking-wider">Horas</span>
+              </div>
+              <span class="text-4xl font-bold text-gray-300 self-start mt-4">:</span>
+              
+              <div class="flex flex-col items-center">
+                <div class="bg-[#f8fafc] border border-[#e2e8f0] text-[#0f172a] text-4xl sm:text-5xl font-bold rounded-xl shadow-sm min-w-[4rem] sm:min-w-[5rem] h-20 sm:h-24 flex items-center justify-center relative overflow-hidden">
+                  <div class="absolute top-1/2 left-0 right-0 h-px bg-gray-200/50"></div>
+                  <span>{{ padZero(timeLeft100().minutes) }}</span>
+                </div>
+                <span class="text-xs font-bold text-gray-400 uppercase mt-3 tracking-wider">Min</span>
+              </div>
+            </div>
+
+            <div class="w-full relative mt-auto px-4">
+              <div class="absolute top-3 left-8 right-8 h-1 bg-gray-100 z-0 rounded"></div>
+              <div class="absolute top-3 left-8 w-1/2 h-1 bg-[#1e3a8a] z-0 rounded"></div>
+              
+              <div class="flex justify-between relative z-10">
+                <div class="flex flex-col items-center">
+                  <div class="w-7 h-7 bg-[#1e3a8a] rounded-full flex items-center justify-center mb-2 shadow-md">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                  </div>
+                  <span class="text-[10px] text-gray-500 uppercase font-bold text-center">Fase Atual<br><span class="text-gray-800">200 Dias</span></span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <div class="w-7 h-7 bg-white border-4 border-[#1e3a8a] rounded-full mb-2 shadow-md outline outline-2 outline-offset-2 outline-blue-100"></div>
+                  <span class="text-[10px] text-[#1e3a8a] uppercase font-bold text-center">Próxima Fase<br><span class="text-gray-800">100 Dias</span><br>15 Mar 2027</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <div class="w-7 h-7 bg-white border-[3px] border-gray-200 rounded-full mb-2"></div>
+                  <span class="text-[10px] text-gray-400 uppercase font-bold text-center">Fase Final<br><span class="text-gray-400">47 Dias</span><br>15 Mar 2029</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center hover:-translate-y-1 transition-transform duration-300">
+            <div class="bg-red-50 text-bm-red font-bold text-[11px] uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+              Redução Definitiva
+            </div>
+            
+            <h3 class="text-4xl font-black text-bm-red mb-2">EM 47 DIAS</h3>
+            
+            <div class="flex items-center w-full max-w-xs mb-8">
+              <div class="flex-grow h-px bg-gray-200"></div>
+              <span class="px-4 text-sm font-bold text-bm-red">15 MAR 2029</span>
+              <div class="flex-grow h-px bg-gray-200"></div>
+            </div>
+
+            <div class="flex gap-2 sm:gap-4 justify-center mb-10">
+              <div class="flex flex-col items-center">
+                <div class="bg-[#fef2f2] border border-[#fecaca] text-bm-red text-4xl sm:text-5xl font-bold rounded-xl shadow-sm min-w-[4rem] sm:min-w-[5rem] h-20 sm:h-24 flex items-center justify-center relative overflow-hidden">
+                  <div class="absolute top-1/2 left-0 right-0 h-px bg-red-200/50"></div>
+                  <span>{{ padZero(timeLeft47().days) }}</span>
+                </div>
+                <span class="text-xs font-bold text-gray-400 uppercase mt-3 tracking-wider">Dias</span>
+              </div>
+              <span class="text-4xl font-bold text-gray-300 self-start mt-4">:</span>
+              
+              <div class="flex flex-col items-center">
+                <div class="bg-[#fef2f2] border border-[#fecaca] text-bm-red text-4xl sm:text-5xl font-bold rounded-xl shadow-sm min-w-[4rem] sm:min-w-[5rem] h-20 sm:h-24 flex items-center justify-center relative overflow-hidden">
+                  <div class="absolute top-1/2 left-0 right-0 h-px bg-red-200/50"></div>
+                  <span>{{ padZero(timeLeft47().hours) }}</span>
+                </div>
+                <span class="text-xs font-bold text-gray-400 uppercase mt-3 tracking-wider">Horas</span>
+              </div>
+              <span class="text-4xl font-bold text-gray-300 self-start mt-4">:</span>
+              
+              <div class="flex flex-col items-center">
+                <div class="bg-[#fef2f2] border border-[#fecaca] text-bm-red text-4xl sm:text-5xl font-bold rounded-xl shadow-sm min-w-[4rem] sm:min-w-[5rem] h-20 sm:h-24 flex items-center justify-center relative overflow-hidden">
+                  <div class="absolute top-1/2 left-0 right-0 h-px bg-red-200/50"></div>
+                  <span>{{ padZero(timeLeft47().minutes) }}</span>
+                </div>
+                <span class="text-xs font-bold text-gray-400 uppercase mt-3 tracking-wider">Min</span>
+              </div>
+            </div>
+
+            <div class="w-full relative mt-auto px-4">
+              <div class="absolute top-3 left-8 right-8 h-1 bg-gray-100 z-0 rounded"></div>
+              <div class="absolute top-3 left-8 w-1/2 h-1 bg-[#1e3a8a] z-0 rounded-l"></div>
+              <div class="absolute top-3 left-[50%] w-[35%] h-1 bg-gradient-to-r from-[#1e3a8a] to-bm-red z-0 rounded-r"></div>
+              
+              <div class="flex justify-between relative z-10">
+                <div class="flex flex-col items-center">
+                  <div class="w-7 h-7 bg-[#1e3a8a] rounded-full flex items-center justify-center mb-2 shadow-md">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                  </div>
+                  <span class="text-[10px] text-gray-500 uppercase font-bold text-center">Fase Atual<br><span class="text-gray-800">200 Dias</span></span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <div class="w-7 h-7 bg-[#1e3a8a] rounded-full flex items-center justify-center mb-2 shadow-md">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                  </div>
+                  <span class="text-[10px] text-[#1e3a8a] uppercase font-bold text-center">Próxima Fase<br><span class="text-gray-800">100 Dias</span><br>15 Mar 2027</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <div class="w-7 h-7 bg-white border-4 border-bm-red rounded-full mb-2 shadow-[0_0_15px_rgba(237,28,36,0.3)] outline outline-2 outline-offset-2 outline-red-100"></div>
+                  <span class="text-[10px] text-bm-red uppercase font-bold text-center">Fase Final<br><span class="text-gray-800">47 Dias</span><br>15 Mar 2029</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -206,7 +346,14 @@ import { RouterLink } from "@angular/router";
 })
 export class HomeComponent implements OnInit, OnDestroy {
   currentHeroIndex = signal(0);
-  private intervalId: any;
+  private sliderIntervalId: any;
+  private countdownIntervalId: any;
+
+  target100 = new Date('2027-03-15T00:00:00'); 
+  target47 = new Date('2029-03-15T00:00:00');  
+
+  timeLeft100 = signal<TimeLeft>(this.calculateTimeLeft(this.target100));
+  timeLeft47 = signal<TimeLeft>(this.calculateTimeLeft(this.target47));
 
   heroImages = [
     'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop',
@@ -214,13 +361,28 @@ export class HomeComponent implements OnInit, OnDestroy {
     'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop'
   ];
 
-  partners = signal([
-    { name: 'Sectigo', img: 'partners/sectigo.svg' },
-    { name: 'Teramind', img: 'partners/teramind.svg' },
-    { name: 'Hexnode', img: 'partners/hexnode.svg' },
-    { name: 'KickIdler', img: 'partners/kickidler.png' },
-    { name: 'Portal Flex', img: 'partners/pfx.svg' },
-    { name: 'Keytalk', img: 'partners/keytalk.svg' }
+   partnerGroups = signal([
+    {
+      category: 'SSL',
+      items: [
+        { name: 'Sectigo', img: 'partners/sectigo.svg', url: '/solutions/sectigo' },
+        { name: 'KeyTalk', img: 'partners/keytalk.svg', url: '/solutions/keytalk' }
+      ]
+    },
+    {
+      category: 'Assinatura Digital',
+      items: [
+        { name: 'PFX', img: 'partners/pfx.svg', url: '/solutions/portal-flex' },
+      ]
+    },
+    {
+      category: 'Monitoramento',
+      items: [
+        { name: 'Teramind', img: 'partners/teramind.svg', url: '/solutions/teramind' },
+        { name: 'Hexnode', img: 'partners/hexnode.svg', url: '/solutions/hexnode' },
+        { name: 'KickIdler', img: 'partners/kickidler.png', url: '/solutions/kickidler' }
+      ]
+    }
   ]);
 
   clients = signal([
@@ -244,15 +406,35 @@ export class HomeComponent implements OnInit, OnDestroy {
   submitSuccess = signal(false);
 
   ngOnInit() {
-    this.intervalId = setInterval(() => {
+    this.sliderIntervalId = setInterval(() => {
       this.currentHeroIndex.update((index) => (index + 1) % this.heroImages.length);
     }, 4000);
+
+  this.countdownIntervalId = setInterval(() => {
+      this.timeLeft100.set(this.calculateTimeLeft(this.target100));
+      this.timeLeft47.set(this.calculateTimeLeft(this.target47));
+    }, 1000);
   }
 
   ngOnDestroy() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
+    if (this.sliderIntervalId) clearInterval(this.sliderIntervalId);
+    if (this.countdownIntervalId) clearInterval(this.countdownIntervalId);
+  }
+
+  calculateTimeLeft(targetDate: Date): TimeLeft {
+    const difference = targetDate.getTime() - new Date().getTime();
+    if (difference > 0) {
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60)
+      };
     }
+    return { days: 0, hours: 0, minutes: 0 };
+  }
+
+  padZero(num: number): string {
+    return num.toString().padStart(2, '0');
   }
 
   scrollTo(sectionId: string) {

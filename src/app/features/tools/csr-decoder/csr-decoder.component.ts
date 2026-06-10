@@ -46,8 +46,7 @@ type ForgeSanExtension = {
           </span>
           <h1 class="mt-6 text-4xl font-bold leading-tight md:text-6xl">CSR Decoder</h1>
           <p class="mt-5 max-w-2xl text-lg leading-relaxed text-blue-100">
-            Cole a sua <strong>Certificate Signing Request</strong> para validar, rapidamente, o domínio, a Chave 
-            Pública e outros detalhes opcionais da solicitação, antes da emissão definitiva do certificado.
+            Cole ou selecione a sua <strong>Certificate Signing Request</strong> para validar, rapidamente, o domínio, a Chave Pública e outros detalhes opcionais da solicitação, antes da emissão definitiva do certificado.
           </p>
         </div>
       </div>
@@ -67,9 +66,19 @@ type ForgeSanExtension = {
             </div>
             </div>
 
-            <label for="csrInput" class="mb-2 block text-sm font-bold uppercase tracking-wide text-slate-600">
-              CSR PEM
-            </label>
+            <div class="mb-2 flex items-center justify-between">
+              <label for="csrInput" class="block text-sm font-bold uppercase tracking-wide text-slate-600">
+                CSR PEM
+              </label>
+              <label class="cursor-pointer text-xs font-bold text-bm-blue transition hover:text-blue-800 hover:underline flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+                Selecionar Arquivo
+                <input type="file" accept=".csr,.pem,.txt" class="hidden" (change)="onFileSelected($event)">
+              </label>
+            </div>
+            
             <textarea
               id="csrInput"
               [(ngModel)]="csrInput"
@@ -199,7 +208,7 @@ type ForgeSanExtension = {
                 </div>
               } @else {
                 <div class="mt-8 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">
-                  Cole uma CSR válida e clique em <strong>Decodificar</strong> para ver os
+                  Cole ou selecione uma CSR válida e clique em <strong>Decodificar</strong> para ver os
                   detalhes aqui.
                 </div>
               }
@@ -244,6 +253,31 @@ export class CsrDecoderComponent {
   errorMessage = signal('');
   fieldsCopyStatus = signal('');
   copyStatus = signal('');
+
+  // Lógica para lidar com o upload de arquivo e leitura via FileReader
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        this.csrInput = content;
+        this.errorMessage.set('');
+        this.decodeCSR(); // Dispara a decodificação automaticamente
+      };
+
+      reader.onerror = () => {
+        this.errorMessage.set('Erro ao ler o arquivo selecionado.');
+      };
+
+      reader.readAsText(file);
+      
+      // Reseta o input para permitir selecionar o mesmo arquivo novamente, se necessário
+      input.value = '';
+    }
+  }
 
   reset() {
     this.csrInput = '';
@@ -385,21 +419,54 @@ export class CsrDecoderComponent {
     };
   }
 
-  private mapAttributes(attributes: ForgeAttribute[]): Record<string, string> {
+  private mapAttributes(attributes: any[]): Record<string, string> {
     const fields: Record<string, string> = {};
 
+    const extractText = (val: any): string => {
+      if (val === null || val === undefined) return '';
+      
+      let extractedString = '';
+
+      if (typeof val === 'string' || typeof val === 'number') {
+        extractedString = String(val);
+      } 
+      else if (Array.isArray(val)) {
+        return val.map(v => extractText(v)).filter(text => text !== '').join(', ');
+      } 
+      else if (typeof val === 'object') {
+        if ('value' in val) {
+          return extractText(val.value);
+        }
+        if (typeof val.data === 'string') {
+          return extractText(val.data);
+        }
+        try { 
+          return JSON.stringify(val); 
+        } catch { 
+          return 'Formato desconhecido'; 
+        }
+      } 
+      else {
+        extractedString = String(val);
+      }
+
+      try {
+        return forge.util.decodeUtf8(extractedString);
+      } catch {
+        try {
+          return decodeURIComponent(escape(extractedString));
+        } catch {
+          return extractedString;
+        }
+      }
+    };
+
     for (const attr of attributes) {
-      const value = typeof attr.value === 'string' ? attr.value : undefined;
-      if (!value) {
-        continue;
-      }
+      const cleanValue = extractText(attr.value).trim();
 
-      if (attr.name) {
-        fields[attr.name] = value;
-      }
-
-      if (attr.shortName) {
-        fields[attr.shortName] = value;
+      if (cleanValue && cleanValue !== '{}' && cleanValue !== '[]') {
+        if (attr.name) fields[attr.name] = cleanValue;
+        if (attr.shortName) fields[attr.shortName] = cleanValue;
       }
     }
 

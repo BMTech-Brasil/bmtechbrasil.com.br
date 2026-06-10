@@ -48,7 +48,7 @@ type ForgeSanExtension = {
           </span>
           <h1 class="mt-6 text-4xl font-bold leading-tight md:text-6xl">Certificate Decoder</h1>
           <p class="mt-5 max-w-2xl text-lg leading-relaxed text-blue-100">
-            Cole um <strong>Certificado</strong> em formato PEM para verificar o domínio, emissor,
+            Cole ou envie um <strong>Certificado</strong> em formato PEM para verificar o domínio, emissor,
             validade, SANs e detalhes a respeito da Chave Pública diretamente no navegador.
           </p>
         </div>
@@ -66,9 +66,18 @@ type ForgeSanExtension = {
               </p>
             </div>
 
-            <label for="certInput" class="mb-2 block text-sm font-bold uppercase tracking-wide text-slate-600">
-              Certificate PEM
-            </label>
+            <div class="mb-2 flex items-center justify-between">
+              <label for="certInput" class="block text-sm font-bold uppercase tracking-wide text-slate-600">
+                Certificate PEM
+              </label>
+              <label class="cursor-pointer text-xs font-bold text-bm-blue transition hover:text-blue-800 hover:underline flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+                Selecionar Arquivo
+                <input type="file" accept=".crt,.cer,.pem,.txt" class="hidden" (change)="onFileSelected($event)">
+              </label>
+            </div>
             <textarea
               id="certInput"
               [(ngModel)]="certInput"
@@ -178,9 +187,7 @@ type ForgeSanExtension = {
                     @if (decodedCert()?.sans?.length) {
                       <div class="mt-3 flex flex-wrap gap-2">
                         @for (san of decodedCert()?.sans || []; track san) {
-                          <span
-                            class="rounded-full bg-white px-3 py-1 text-sm font-medium text-slate-700 ring-1 ring-slate-200"
-                          >
+                          <span class="rounded-full bg-white px-3 py-1 text-sm font-medium text-slate-700 ring-1 ring-slate-200">
                             {{ san }}
                           </span>
                         }
@@ -206,7 +213,7 @@ type ForgeSanExtension = {
                 </div>
               } @else {
                 <div class="mt-8 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">
-                  Cole um Certificado válido e clique em <strong>Decodificar</strong>
+                  Cole ou envie um Certificado válido e clique em <strong>Decodificar</strong>
                   para ver os detalhes aqui.
                 </div>
               }
@@ -252,6 +259,30 @@ export class CertDecoderComponent {
   errorMessage = signal('');
   fieldsCopyStatus = signal('');
   publicKeyCopyStatus = signal('');
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        this.certInput = content;
+        this.errorMessage.set('');
+        this.decodeCertificate();
+      };
+
+      reader.onerror = () => {
+        this.errorMessage.set('Erro ao ler o arquivo selecionado.');
+      };
+
+      reader.readAsText(file);
+      
+      // Reseta o input para permitir selecionar o mesmo arquivo novamente
+      input.value = '';
+    }
+  }
 
   reset() {
     this.certInput = '';
@@ -332,7 +363,7 @@ export class CertDecoderComponent {
     }
 
     if (!normalizedCert.includes('-----BEGIN CERTIFICATE-----')) {
-      throw new Error('Formato de certificado inválido. Verifique se o bloco PEM completo.');
+      throw new Error('Formato de certificado inválido. Verifique se o bloco PEM está completo.');
     }
 
     let certificateObject: forge.pki.Certificate;
@@ -367,21 +398,55 @@ export class CertDecoderComponent {
     };
   }
 
-  private mapAttributes(attributes: ForgeAttribute[]): Record<string, string> {
+  private mapAttributes(attributes: any[]): Record<string, string> {
     const fields: Record<string, string> = {};
 
+    const extractText = (val: any): string => {
+      if (val === null || val === undefined) return '';
+      
+      let extractedString = '';
+
+      if (typeof val === 'string' || typeof val === 'number') {
+        extractedString = String(val);
+      } 
+      else if (Array.isArray(val)) {
+        return val.map(v => extractText(v)).filter(text => text !== '').join(', ');
+      } 
+      else if (typeof val === 'object') {
+        if ('value' in val) {
+          return extractText(val.value);
+        }
+        if (typeof val.data === 'string') {
+          return extractText(val.data);
+        }
+        try { 
+          return JSON.stringify(val); 
+        } catch { 
+          return 'Formato desconhecido'; 
+        }
+      } 
+      else {
+        extractedString = String(val);
+      }
+
+      // Tratamento para decodificação UTF-8
+      try {
+        return forge.util.decodeUtf8(extractedString);
+      } catch {
+        try {
+          return decodeURIComponent(escape(extractedString));
+        } catch {
+          return extractedString;
+        }
+      }
+    };
+
     for (const attr of attributes) {
-      const value = typeof attr.value === 'string' ? attr.value : undefined;
-      if (!value) {
-        continue;
-      }
+      const cleanValue = extractText(attr.value).trim();
 
-      if (attr.name) {
-        fields[attr.name] = value;
-      }
-
-      if (attr.shortName) {
-        fields[attr.shortName] = value;
+      if (cleanValue && cleanValue !== '{}' && cleanValue !== '[]') {
+        if (attr.name) fields[attr.name] = cleanValue;
+        if (attr.shortName) fields[attr.shortName] = cleanValue;
       }
     }
 
