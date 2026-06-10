@@ -10,16 +10,17 @@ import { RouterLink } from '@angular/router';
     <div class="bg-gray-50 border-b border-gray-200 mt-20 py-4 relative z-20 shadow-sm">
       <div class="container mx-auto px-2 md:px-6">
         <div class="flex flex-wrap lg:flex-nowrap justify-center items-center gap-2 md:gap-4">
-
-          @for (partner of partners(); track partner.name) {
-            <div class="group flex items-center justify-center w-20 h-14 md:w-24 md:h-16 lg:w-28 lg:h-16 p-2 rounded-lg border border-transparent hover:bg-white hover:border-gray-200 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-               <img [src]="partner.img" [alt]="partner.name" 
-                    class="max-h-full max-w-full object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-               
-               <span class="hidden text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-bm-blue transition-colors select-none text-center leading-tight">
-                 {{ partner.name }}
-               </span>
+          @for (group of partnerGroups(); track group.category) {
+            <div class="flex flex-col items-center">
+              <span class="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-200 pb-1 px-4">{{ group.category }}</span>
+              <div class="flex flex-wrap justify-center gap-2 md:gap-4">
+                @for (partner of group.items; track partner.name) {
+                  <a [routerLink]="partner.url" class="group flex items-center justify-center w-20 h-14 md:w-24 md:h-16 lg:w-28 lg:h-16 p-2 rounded-lg border border-transparent hover:bg-white hover:border-gray-200 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+                     <img [src]="partner.img" [alt]="partner.name" class="max-h-full max-w-full object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                     <span class="hidden text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-bm-blue transition-colors select-none text-center leading-tight">{{ partner.name }}</span>
+                  </a>
+                }
+              </div>
             </div>
           }
         </div>
@@ -153,13 +154,27 @@ import { RouterLink } from '@angular/router';
   `
 })
 export class MonitoramentoComponent {
-
-    partners = signal([
-    { name: 'Sectigo', img: 'partners/sectigo.svg' },
-    { name: 'Teramind', img: 'partners/teramind.svg' },
-    { name: 'Hexnode', img: 'partners/hexnode.svg' },
-    { name: 'KickIdler', img: 'partners/kickidler.png' },
-    { name: 'Portal Flex', img: 'partners/pfx.svg' },
-    { name: 'Keytalk', img: 'partners/keytalk.svg' }
+  partnerGroups = signal([
+    {
+      category: 'SSL',
+      items: [
+        { name: 'Sectigo', img: 'partners/sectigo.svg', url: '/solutions/sectigo' },
+        { name: 'KeyTalk', img: 'partners/keytalk.svg', url: '/solutions/keytalk' }
+      ]
+    },
+    {
+      category: 'Assinatura Digital',
+      items: [
+        { name: 'PFX', img: 'partners/pfx.svg', url: '/solutions/portal-flex' },
+      ]
+    },
+    {
+      category: 'Monitoramento',
+      items: [
+        { name: 'Teramind', img: 'partners/teramind.svg', url: '/solutions/teramind' },
+        { name: 'Hexnode', img: 'partners/hexnode.svg', url: '/solutions/hexnode' },
+        { name: 'KickIdler', img: 'partners/kickidler.png', url: '/solutions/kickidler' }
+      ]
+    }
   ]);
 }
