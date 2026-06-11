@@ -75,9 +75,9 @@ import emailjs from '@emailjs/browser';
             </div>
           </div>
           
-          <a href="#" (click)="openContactModal('Contato Geral', $event)" class="bg-bm-red text-white px-6 py-2 rounded font-bold text-sm hover:bg-red-700 transition shadow-md font-sans whitespace-nowrap">
+          <button (click)="openContactModal('Contato Geral', $event)" class="bg-bm-red text-white px-6 py-2 rounded font-bold text-sm hover:bg-red-700 transition shadow-md font-sans whitespace-nowrap track-abrir-modal">
             Fale Conosco
-          </a>
+          </button>
         </div>
 
         <button (click)="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-bm-red focus:outline-none transition-colors">
@@ -134,7 +134,7 @@ import emailjs from '@emailjs/browser';
 
             <a routerLink="/solutions/portal-flex" (click)="closeMobileMenu()" class="text-lg font-bold text-gray-700 hover:text-bm-red uppercase border-b border-gray-50 pb-2">Portal Flex</a>
             
-            <button (click)="openContactModal('Contato Geral', $event); closeMobileMenu()" class="w-full bg-bm-red text-white py-4 rounded-xl font-bold hover:bg-red-700 transition mt-4 text-center uppercase shadow-md shadow-red-900/20">
+            <button (click)="openContactModal('Contato Geral', $event); closeMobileMenu()" class="w-full bg-bm-red text-white py-4 rounded-xl font-bold hover:bg-red-700 transition mt-4 text-center uppercase shadow-md shadow-red-900/20 track-abrir-modal">
               Fale Conosco
             </button>
           </div>

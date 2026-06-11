@@ -45,7 +45,7 @@ import { RouterLink } from '@angular/router';
             <button class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-lg">
               Agendar Demonstração
             </button>
-            <button (click)="openContactModal('Teste de 15 dias - Teramind', $event)" class="bg-white hover:bg-gray-100 text-bm-blue px-6 py-3 md:px-8 md:py-4 rounded font-bold transition shadow-lg whitespace-nowrap">
+            <button (click)="openContactModal('Teste de 15 dias - Teramind', $event)" class="bg-white hover:bg-gray-100 text-bm-blue px-6 py-3 md:px-8 md:py-4 rounded font-bold transition shadow-lg whitespace-nowrap track-abrir-modal">
               Teste de 15 Dias
             </button>
             <button class="border border-white/30 hover:bg-white/10 text-white px-8 py-4 rounded font-bold transition">
@@ -198,16 +198,16 @@ import { RouterLink } from '@angular/router';
               <tr class="bg-gray-50">
                 <td class="p-4"></td>
                 <td class="p-4 text-center">
-                  <button (click)="openContactModal('Teramind Starter', $event)" class="text-xs font-bold text-bm-blue border-2 border-bm-blue px-4 py-2.5 rounded hover:bg-bm-blue hover:text-white transition w-full">Cotação</button>
+                  <button (click)="openContactModal('Teramind Starter', $event)" class="text-xs font-bold text-bm-blue border-2 border-bm-blue px-4 py-2.5 rounded hover:bg-bm-blue hover:text-white transition w-full track-abrir-modal">Cotação</button>
                 </td>
                 <td class="p-4 text-center">
-                  <button (click)="openContactModal('Teramind UAM', $event)" class="text-xs font-bold text-bm-blue border-2 border-bm-blue px-4 py-2.5 rounded hover:bg-bm-blue hover:text-white transition w-full">Cotação</button>
+                  <button (click)="openContactModal('Teramind UAM', $event)" class="text-xs font-bold text-bm-blue border-2 border-bm-blue px-4 py-2.5 rounded hover:bg-bm-blue hover:text-white transition w-full track-abrir-modal">Cotação</button>
                 </td>
                 <td class="p-4 text-center">
-                  <button (click)="openContactModal('Teramind DLP', $event)" class="text-xs font-bold text-bm-blue border-2 border-bm-blue px-4 py-2.5 rounded hover:bg-bm-blue hover:text-white transition w-full">Cotação</button>
+                  <button (click)="openContactModal('Teramind DLP', $event)" class="text-xs font-bold text-bm-blue border-2 border-bm-blue px-4 py-2.5 rounded hover:bg-bm-blue hover:text-white transition w-full track-abrir-modal">Cotação</button>
                 </td>
                 <td class="p-4 text-center bg-red-50/30">
-                  <button (click)="openContactModal('Teramind Enterprise', $event)" class="text-xs font-bold text-white bg-bm-red border-2 border-bm-red px-4 py-2.5 rounded hover:bg-red-800 hover:border-red-800 transition w-full shadow-md">Cotação</button>
+                  <button (click)="openContactModal('Teramind Enterprise', $event)" class="text-xs font-bold text-white bg-bm-red border-2 border-bm-red px-4 py-2.5 rounded hover:bg-red-800 hover:border-red-800 transition w-full shadow-md track-abrir-modal">Cotação</button>
                 </td>
               </tr>
             </tbody>

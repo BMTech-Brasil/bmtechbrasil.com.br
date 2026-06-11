@@ -44,7 +44,7 @@ import { RouterLink } from '@angular/router';
           </p>
           
           <div class="flex flex-col sm:flex-row gap-4">
-            <button (click)="openContactModal('Consultoria Sectigo SSL', $event)" class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-lg transform hover:-translate-y-1">
+            <button (click)="openContactModal('Consultoria Sectigo SSL', $event)" class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-lg transform hover:-translate-y-1 track-abrir-modal">
               Falar com Especialista
             </button>
           </div>
@@ -161,20 +161,20 @@ import { RouterLink } from '@angular/router';
 
             <ul class="w-full text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
               <li>
-                <a href="#" (click)="openContactModal('Wildcard OV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
-                  <span class="flex items-center gap-2">
+                <button (click)="openContactModal('Wildcard OV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
+                  <span class="flex items-center gap-2 track-abrir-modal">
                     <span class="w-1.5 h-1.5 bg-gray-300 rounded-sm"></span> Wildcard OV SSL
                   </span>
                   <span class="text-green-500 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" (click)="openContactModal('Wildcard DV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
-                  <span class="flex items-center gap-2">
+                <button (click)="openContactModal('Wildcard DV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
+                  <span class="flex items-center gap-2 track-abrir-modal">
                     <span class="w-1.5 h-1.5 bg-gray-300 rounded-sm"></span> Wildcard DV SSL
                   </span>
                   <span class="text-green-500 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -194,28 +194,28 @@ import { RouterLink } from '@angular/router';
 
             <ul class="w-full text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
               <li>
-                <a href="#" (click)="openContactModal('Multi Domain EV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
+                <button (click)="openContactModal('Multi Domain EV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition track-abrir-modal">
                   <span class="flex items-center gap-2">
                     <span class="w-1.5 h-1.5 bg-gray-300 rounded-sm"></span> Multi Domain EV SSL
                   </span>
                   <span class="text-green-500 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" (click)="openContactModal('Multi Domain OV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
+                <button (click)="openContactModal('Multi Domain OV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition track-abrir-modal">
                   <span class="flex items-center gap-2">
                     <span class="w-1.5 h-1.5 bg-gray-300 rounded-sm"></span> Multi Domain OV SSL
                   </span>
                   <span class="text-green-500 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" (click)="openContactModal('Multi Domain DV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
+                <button (click)="openContactModal('Multi Domain DV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition track-abrir-modal">
                   <span class="flex items-center gap-2">
                     <span class="w-1.5 h-1.5 bg-gray-300 rounded-sm"></span> Multi Domain DV SSL
                   </span>
                   <span class="text-green-500 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -235,28 +235,28 @@ import { RouterLink } from '@angular/router';
 
             <ul class="w-full text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
               <li>
-                <a href="#" (click)="openContactModal('Single Domain EV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
+                <button (click)="openContactModal('Single Domain EV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition track-abrir-modal">
                   <span class="flex items-center gap-2">
                     <span class="w-1.5 h-1.5 bg-gray-300 rounded-sm"></span> Single Domain EV SSL
                   </span>
                   <span class="text-green-500 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" (click)="openContactModal('Single Domain OV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
+                <button (click)="openContactModal('Single Domain OV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition track-abrir-modal">
                   <span class="flex items-center gap-2">
                     <span class="w-1.5 h-1.5 bg-gray-300 rounded-sm"></span> Single Domain OV SSL
                   </span>
                   <span class="text-green-500 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" (click)="openContactModal('Single Domain DV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition">
+                <button (click)="openContactModal('Single Domain DV SSL', $event)" class="group flex items-center justify-between text-sm text-gray-500 hover:text-bm-blue transition track-abrir-modal">
                   <span class="flex items-center gap-2">
                     <span class="w-1.5 h-1.5 bg-gray-300 rounded-sm"></span> Single Domain DV SSL
                   </span>
                   <span class="text-green-500 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </a>
+               </button>
               </li>
             </ul>
           </div>

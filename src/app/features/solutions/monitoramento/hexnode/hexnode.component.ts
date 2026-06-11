@@ -45,10 +45,10 @@ import { RouterLink } from '@angular/router';
           </p>
           
           <div class="flex flex-col sm:flex-row gap-4">
-            <button (click)="openContactModal('Hexnode UEM', $event)" class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-[0_4px_20px_rgba(220,38,38,0.4)] transform hover:-translate-y-1">
+            <button (click)="openContactModal('Hexnode UEM', $event)" class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-[0_4px_20px_rgba(220,38,38,0.4)] transform hover:-translate-y-1 track-abrir-modal">
               Agendar Demonstração
             </button>
-            <button (click)="openContactModal('Teste de 15 dias - HexNode', $event)" class="bg-white hover:bg-gray-100 text-bm-blue px-6 py-3 md:px-8 md:py-4 rounded font-bold transition shadow-lg whitespace-nowrap">
+            <button (click)="openContactModal('Teste de 15 dias - HexNode', $event)" class="bg-white hover:bg-gray-100 text-bm-blue px-6 py-3 md:px-8 md:py-4 rounded font-bold transition shadow-lg whitespace-nowrap track-abrir-modal">
               Teste de 15 Dias
             </button>
           </div>
@@ -210,7 +210,7 @@ import { RouterLink } from '@angular/router';
         <p class="text-gray-600 max-w-2xl mx-auto mb-10 text-lg">
           Agende uma Prova de Conceito (PoC) gratuita com a BMTech. Vamos desenhar as políticas de segurança e provar o valor do Hexnode UEM operando diretamente no seu ambiente.
         </p>
-        <button (click)="openContactModal('Hexnode UEM', $event)" class="bg-red-600 hover:bg-red-800 text-white px-10 py-4 rounded font-bold transition shadow-lg text-lg transform hover:-translate-y-1">
+        <button (click)="openContactModal('Hexnode UEM', $event)" class="bg-red-600 hover:bg-red-800 text-white px-10 py-4 rounded font-bold transition shadow-lg text-lg transform hover:-translate-y-1 track-abrir-modal">
           Solicitar Proposta e Demonstração
         </button>
       </div>
