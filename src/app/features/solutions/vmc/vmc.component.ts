@@ -47,7 +47,7 @@ import { RouterLink } from '@angular/router';
           </p>
           
           <div class="flex flex-col sm:flex-row gap-4">
-            <button (click)="openContactModal('Cotação VMC (BIMI)', $event)" class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-lg shadow-red-900/20 transform hover:-translate-y-1">
+            <button (click)="openContactModal('Cotação VMC (BIMI)', $event)" class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-lg shadow-red-900/20 transform hover:-translate-y-1 track-abrir-modal">
               Solicitar Cotação VMC
             </button>
           </div>
@@ -297,7 +297,7 @@ import { RouterLink } from '@angular/router';
             </li>
           </ul>
 
-          <button (click)="openContactModal('Consultoria e Cotação VMC', $event)" class="block w-full bg-bm-blue text-white text-center py-4 rounded-lg font-bold hover:bg-blue-900 transition shadow-md">
+          <button (click)="openContactModal('Consultoria e Cotação VMC', $event)" class="block w-full bg-bm-blue text-white text-center py-4 rounded-lg font-bold hover:bg-blue-900 transition shadow-md track-abrir-modal">
             Falar com Especialista VMC
           </button>
         </div>

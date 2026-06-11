@@ -46,7 +46,7 @@ import { RouterLink } from '@angular/router';
         </p>
         
         <div class="flex justify-center gap-4">
-          <button (click)="openContactModal('Sectigo CLM', $event)" class="bg-bm-red hover:bg-red-700 text-white px-10 py-4 rounded font-bold transition shadow-lg shadow-red-900/40 transform hover:-translate-y-1 text-lg">
+          <button (click)="openContactModal('Sectigo CLM', $event)" class="bg-bm-red hover:bg-red-700 text-white px-10 py-4 rounded font-bold transition shadow-lg shadow-red-900/40 transform hover:-translate-y-1 text-lg track-abrir-modal">
             Agendar Demonstração Sectigo
           </button>
         </div>
@@ -205,7 +205,7 @@ import { RouterLink } from '@angular/router';
           Pare de apagar incêndios devido a certificados expirados. Agende uma consultoria técnica gratuita com os especialistas da BMTech e implemente um CLM de classe mundial.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <button (click)="openContactModal('Consultoria Sectigo CLM', $event)" class="bg-bm-red hover:bg-red-700 text-white px-10 py-4 rounded font-bold text-lg transition shadow-lg">
+          <button (click)="openContactModal('Consultoria Sectigo CLM', $event)" class="bg-bm-red hover:bg-red-700 text-white px-10 py-4 rounded font-bold text-lg transition shadow-lg track-abrir-modal">
             Falar com Especialista
           </button>
         </div>

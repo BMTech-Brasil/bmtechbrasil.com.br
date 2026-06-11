@@ -56,7 +56,7 @@ interface TimeLeft {
             Revendedores oficiais <span class="font-bold text-green-500">Sectigo</span> no Brasil, Peru e EUA.
           </p>
           <div class="flex flex-col md:flex-row gap-4">
-            <button (click)="openContactModal('Consultoria de Segurança', $event)" class="bg-bm-red text-white px-8 py-4 rounded font-bold hover:bg-red-800 transition shadow-lg">Falar com um Consultor</button>
+            <button (click)="openContactModal('Consultoria de Segurança', $event)" class="bg-bm-red text-white px-8 py-4 rounded font-bold hover:bg-red-800 transition shadow-lg track-abrir-modal">Falar com um Consultor</button>
             <button (click)="scrollTo('nossas-solucoes')" class="border-2 border-bm-white text-bm-white px-8 py-4 rounded font-bold hover:bg-bm-blue hover:text-white transition">
               Nossas Soluções
             </button>

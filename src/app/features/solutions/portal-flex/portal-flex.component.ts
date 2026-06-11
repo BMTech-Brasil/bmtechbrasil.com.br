@@ -46,7 +46,7 @@ import { RouterLink } from '@angular/router';
               O <strong>Portal Flex</strong> centraliza a assinatura de documentos (Digital e Eletrônica), automação de processos (BPM) e custódia de arquivos em um ambiente seguro e com validade jurídica.
             </p>
             <div class="flex flex-col sm:flex-row gap-4">
-              <button (click)="openContactModal('Portal Flex - Demonstração', $event)" class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-lg shadow-red-900/20 transform hover:-translate-y-1">
+              <button (click)="openContactModal('Portal Flex - Demonstração', $event)" class="bg-bm-red hover:bg-red-700 text-white px-8 py-4 rounded font-bold transition shadow-lg shadow-red-900/20 transform hover:-translate-y-1 track-abrir-modal">
                 Solicitar Demonstração
               </button>
             </div>
@@ -235,7 +235,7 @@ import { RouterLink } from '@angular/router';
         <p class="text-white-100 max-w-2xl mx-auto mb-10 text-lg">
           Fale com nossos especialistas e descubra como o Portal Flex pode reduzir seus custos e aumentar a segurança jurídica dos seus documentos.
         </p>
-        <button (click)="openContactModal('Consultoria Portal Flex', $event)" class="bg-bm-red text-white px-12 py-5 rounded-lg font-bold text-lg hover:bg-red-700 transition shadow-2xl hover:scale-105 transform duration-200">
+        <button (click)="openContactModal('Consultoria Portal Flex', $event)" class="bg-bm-red text-white px-12 py-5 rounded-lg font-bold text-lg hover:bg-red-700 transition shadow-2xl hover:scale-105 transform duration-200 track-abrir-modal">
           Falar com um Consultor
         </button>
       </div>
