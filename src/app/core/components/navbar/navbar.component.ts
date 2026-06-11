@@ -62,7 +62,7 @@ import emailjs from '@emailjs/browser';
           <a routerLink="/solutions/portal-flex" class="nav-item">Portal Flex</a>
 
           <div class="relative group h-20 flex items-center">
-            <a routerLink="/solutions/monitoramento" class="nav-item flex items-center gap-1 focus:outline-none cursor-pointer">
+            <a routerLink="/tools/tools" class="nav-item flex items-center gap-1 focus:outline-none cursor-pointer">
               Ferramentas
               <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </a>
