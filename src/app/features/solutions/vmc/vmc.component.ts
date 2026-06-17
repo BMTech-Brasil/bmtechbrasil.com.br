@@ -52,27 +52,16 @@ import { RouterLink } from '@angular/router';
             </button>
           </div>
         </div>
-        
-        <div class="relative group perspective-1000 hidden lg:block">
-          <div class="bg-white text-gray-800 rounded-xl shadow-2xl p-6 max-w-md mx-auto relative z-10 transform transition-transform duration-500 hover:scale-105 border border-gray-200">
-             <div class="flex gap-2 mb-4 border-b border-gray-100 pb-2">
-               <div class="w-3 h-3 rounded-full bg-red-400"></div>
-               <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-               <div class="w-3 h-3 rounded-full bg-green-400"></div>
-             </div>
-             <div class="flex items-start gap-4 p-3 bg-blue-50/50 rounded-lg border-l-4 border-blue-500 shadow-sm">
-                <div class="relative shrink-0">
-                  <div class="w-12 h-12 bg-bm-blue rounded-full flex items-center justify-center text-white font-bold text-xl ring-2 ring-white shadow-md">BM</div>
-                  <div class="absolute -bottom-1 -right-1 bg-blue-500 text-white w-5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm" title="Verificado">
-                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                  </div>
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-900 text-sm">BMTech Brasil</h4>
-                  <p class="text-xs font-bold text-gray-800">Sua segurança digital foi atualizada</p>
-                  <p class="text-xs text-gray-500">Olá, confirmamos a ativação do seu certificado...</p>
-                </div>
-             </div>
+        <div class="relative group hidden lg:block perspective-1000">
+          <div class="relative max-w-md mx-auto  drop-shadow-2xl transform transition-transform duration-500 hover:scale-105 cursor-pointer">
+            <img src="antes-vmc.png" alt="Caixa de entrada sem VMC" class="block w-full h-auto object-contain transition-opacity duration-700 ease-in-out">
+            <img src="depois-vmc.png" alt="Caixa de entrada com VMC" class="absolute inset-0 w-full h-full object-contain opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-in-out z-10">
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 bg-gray-900/80 backdrop-blur-sm text-white text-xs font-bold px-4 py-2 rounded-full pointer-events-none transition-opacity duration-300 group-hover:opacity-0 shadow-lg whitespace-nowrap">
+              Passe o mouse para comparar
+            </div> 
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-bm-blue/90 backdrop-blur-sm text-white text-xs font-bold px-4 py-2 rounded-full pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100 shadow-lg whitespace-nowrap">
+              Com VMC Ativado
+            </div>
           </div>
         </div>
       </div>
@@ -228,7 +217,7 @@ import { RouterLink } from '@angular/router';
           </p>
         </div>
 
-        <div class="max-w-4xl mx-auto bg-white p-3 md:p-5 rounded-[2rem] border border-gray-200 shadow-2xl">
+        <div class="max-w-4xl mx-auto bg-white p-3 md:p-5 rounded-[2rem] border border-gray-200 drop-shadow-2xl">
           <div class="aspect-video rounded-2xl overflow-hidden relative bg-black shadow-inner">
             <iframe [src]="safeVideoUrl" title="Apresentação VMC e BIMI" class="absolute inset-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
             </iframe>
